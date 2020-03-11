@@ -8,6 +8,6 @@
 - ASP.NET Core development environment
 
 ### Configuration
-- Modify appsettings.Development.json with apppropriate credentials
+- Modify appsettings.json with apppropriate credentials
 - Modify Home/Index.cshtml for additional Flex Fields settings
 - Run the project
