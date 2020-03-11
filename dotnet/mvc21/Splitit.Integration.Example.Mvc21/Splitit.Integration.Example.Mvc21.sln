@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29806.167
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Splitit.Integration.Example.Mvc21", "Splitit.Integration.Example.Mvc21.csproj", "{8C15DC35-CB78-488D-ACA7-4107FF448C52}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8C15DC35-CB78-488D-ACA7-4107FF448C52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C15DC35-CB78-488D-ACA7-4107FF448C52}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C15DC35-CB78-488D-ACA7-4107FF448C52}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C15DC35-CB78-488D-ACA7-4107FF448C52}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {59D2E21D-997F-4C63-9BF9-B9F128A2318D}
+	EndGlobalSection
+EndGlobal
