@@ -1,0 +1,6 @@
+priorityClass: splitit-high
+
+env:
+  UseSSM:
+    value: 'false'
+

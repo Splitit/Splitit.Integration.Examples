@@ -1,0 +1,10 @@
+resources:
+  requests:
+    cpu: 100m
+    memory: 300Mi
+  limits:
+    memory: 2Gi
+
+hpa:
+  minReplicas: 3
+  maxReplicas: 12
