@@ -42,41 +42,49 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
         [HttpPost]
         public async Task<JsonResult> FlexFieldsExample(decimal amount, int? numInstallments = null)
         {
-            var billingAddress = new AddressData();
-            var consumerModel = new ConsumerData(isLocked: false, isDataRestricted: false);
-
-            await this.TryUpdateModelAsync(billingAddress, "billingAddress");
-            await this.TryUpdateModelAsync(consumerModel, "consumerModel");
-
-            Configuration.Sandbox.AddApiKey(this._configuration["SplititApiKey"]);
-
-            var loginApi = new LoginApi(Configuration.Sandbox);
-            var request = new LoginRequest(userName: this._configuration["SplititApiUsername"], password: this._configuration["SplititApiPassword"]);
-
-            var loginResult = await loginApi.LoginPostAsync(request);
-
-            var installmentPlanApi = new InstallmentPlanApi(Configuration.Sandbox, sessionId: loginResult.SessionId);
-            var initResponse = installmentPlanApi.InstallmentPlanInitiate(new InitiateInstallmentPlanRequest()
+            try
             {
-                PlanData = new PlanData(
-                    amount: new MoneyWithCurrencyCode(amount, "USD"),
-                    numberOfInstallments: numInstallments,
-                    attempt3DSecure: false),
-                BillingAddress = billingAddress,
-                ConsumerData = consumerModel,
-                PaymentWizardData = new PaymentWizardData(
-                    requestedNumberOfInstallments: "1,2,4,6,8",
-                    isOpenedInIframe: false),
-                RedirectUrls = new RedirectUrls(
-                    succeeded: "https://www.success.com/",
-                    failed: "https://www.ynet.co.il/",
-                    canceled: "https://www.walla.com/")
-            });
+                var billingAddress = new AddressData();
+                var consumerModel = new ConsumerData(isLocked: false, isDataRestricted: false);
 
-            return new JsonResult(initResponse, new Newtonsoft.Json.JsonSerializerSettings()
+                await this.TryUpdateModelAsync(billingAddress, "billingAddress");
+                await this.TryUpdateModelAsync(consumerModel, "consumerModel");
+
+                Configuration.Sandbox.AddApiKey(this._configuration["SplititApiKey"]);
+
+                var loginApi = new LoginApi(Configuration.Sandbox);
+                var request = new LoginRequest(userName: this._configuration["SplititApiUsername"], password: this._configuration["SplititApiPassword"]);
+
+                var loginResult = await loginApi.LoginPostAsync(request);
+
+                var installmentPlanApi = new InstallmentPlanApi(Configuration.Sandbox, sessionId: loginResult.SessionId);
+                var initResponse = installmentPlanApi.InstallmentPlanInitiate(new InitiateInstallmentPlanRequest()
+                {
+                    PlanData = new PlanData(
+                        amount: new MoneyWithCurrencyCode(amount, "USD"),
+                        numberOfInstallments: numInstallments,
+                        attempt3DSecure: false),
+                    BillingAddress = billingAddress,
+                    ConsumerData = consumerModel,
+                    PaymentWizardData = new PaymentWizardData(
+                        requestedNumberOfInstallments: "1,2,4,6,8",
+                        isOpenedInIframe: false),
+                    RedirectUrls = new RedirectUrls(
+                        succeeded: "https://www.success.com/",
+                        failed: "https://www.ynet.co.il/",
+                        canceled: "https://www.walla.com/")
+                });
+
+                return new JsonResult(initResponse, new Newtonsoft.Json.JsonSerializerSettings()
+                {
+                    ContractResolver = new CamelCasePropertyNamesContractResolver()
+                });
+            }
+            catch(Exception ex)
             {
-                ContractResolver = new CamelCasePropertyNamesContractResolver()
-            });
+                return Json(ex);
+            }
+            
         }
     }
 }
