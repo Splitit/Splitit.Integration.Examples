@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -63,7 +64,9 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
 
                 //loginResult = await loginApi.LoginPostAsync(request);
 
-                using (var client = new HttpClient())
+                var logger = new LoggingHandler(new HttpClientHandler());
+
+                using (var client = new HttpClient(logger))
                 {
                     client.BaseAddress = new Uri("https://webapi.sandbox.splitit.com/");
 
@@ -77,10 +80,7 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
                     var result = await client.PostAsync("/api/Login", data);
 
                     var manualResponse = await result.Content.ReadAsAsync<LoginResponse>();
-                    return Json(new { manual = manualResponse, result.Headers, result.StatusCode, request = new {
-                        headers = data,
-                        creds = json
-                    } });
+                    return Json(new { logger.Log });
                 }
 
                 var initRequest = new InitiateInstallmentPlanRequest()
@@ -162,6 +162,38 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
                 return Json(new { exception = ex, loginData = loginResult });
             }
             
+        }
+    }
+
+    public class LoggingHandler : DelegatingHandler
+    {
+        public List<string> Log { get; set; }
+
+        public LoggingHandler(HttpMessageHandler innerHandler)
+            : base(innerHandler)
+        {
+            Log = new List<string>();
+        }
+
+        protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        {
+            Log.Add("Request:");
+            Log.Add(request.ToString());
+            if (request.Content != null)
+            {
+                Log.Add(await request.Content.ReadAsStringAsync());
+            }
+
+            HttpResponseMessage response = await base.SendAsync(request, cancellationToken);
+
+            Log.Add("Response:");
+            Log.Add(response.ToString());
+            if (response.Content != null)
+            {
+                Log.Add(await response.Content.ReadAsStringAsync());
+            }
+
+            return response;
         }
     }
 }
