@@ -26,15 +26,15 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
             this._configuration = configuration;
         }
 
-        public IActionResult Index(decimal? amount = 500)
+        public IActionResult Index()
         {
-            ViewBag.Amount = amount;
-            ViewBag.UpstreamMerchantId = this._configuration["SplititMerchantId"];
             return View();
         }
 
-        public IActionResult Privacy()
+        public IActionResult Example(decimal? amount = 500)
         {
+            ViewBag.Amount = amount;
+            ViewBag.UpstreamMerchantId = this._configuration["SplititMerchantId"];
             return View();
         }
 
