@@ -77,7 +77,10 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
                     var result = await client.PostAsync("/api/Login", data);
 
                     var manualResponse = await result.Content.ReadAsAsync<LoginResponse>();
-                    return Json(new { manual = manualResponse, result.Headers, result.StatusCode });
+                    return Json(new { manual = manualResponse, result.Headers, result.StatusCode, request = new {
+                        headers = data,
+                        creds = json
+                    } });
                 }
 
                 var initRequest = new InitiateInstallmentPlanRequest()
