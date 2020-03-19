@@ -58,10 +58,27 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
 
                 Configuration.Sandbox.AddApiKey(this._configuration["SplititApiKey"]);
 
-                var loginApi = new LoginApi(Configuration.Sandbox);
-                var request = new LoginRequest(userName: this._configuration["SplititApiUsername"], password: this._configuration["SplititApiPassword"]);
+                //var loginApi = new LoginApi(Configuration.Sandbox);
+                //var request = new LoginRequest(userName: this._configuration["SplititApiUsername"], password: this._configuration["SplititApiPassword"]);
 
-                loginResult = await loginApi.LoginPostAsync(request);
+                //loginResult = await loginApi.LoginPostAsync(request);
+
+                using (var client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri("https://webapi.sandbox.splitit.com/");
+
+                    var json = JsonConvert.SerializeObject(new
+                    {
+                        Username = this._configuration["SplititApiUsername"],
+                        Password = this._configuration["SplititApiPassword"]
+                    });
+
+                    var data = new StringContent(json, Encoding.UTF8, "application/json");
+                    var result = await client.PostAsync("/api/Login", data);
+
+                    var manualResponse = await result.Content.ReadAsAsync<LoginResponse>();
+                    return Json(new { manual = manualResponse, result.Headers, result.StatusCode });
+                }
 
                 var initRequest = new InitiateInstallmentPlanRequest()
                 {
