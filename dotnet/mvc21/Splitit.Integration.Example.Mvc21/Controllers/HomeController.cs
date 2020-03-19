@@ -85,10 +85,6 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
             }
             catch(Exception ex)
             {
-                if (loginResult?.SessionId != null && loginResult?.SessionId.Length > 8)
-                {
-                    loginResult.SessionId = loginResult.SessionId.Substring(0, 8) + "....trimmed";
-                }
                 return Json(new { exception = ex, loginData = loginResult });
             }
             
