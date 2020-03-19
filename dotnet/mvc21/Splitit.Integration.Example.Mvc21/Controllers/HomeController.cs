@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Splitit.Integration.Example.Mvc21.Models;
 using Splitit.SDK.Client.Api;
@@ -60,8 +63,7 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
 
                 loginResult = await loginApi.LoginPostAsync(request);
 
-                var installmentPlanApi = new InstallmentPlanApi(Configuration.Sandbox, sessionId: loginResult.SessionId);
-                var initResponse = installmentPlanApi.InstallmentPlanInitiate(new InitiateInstallmentPlanRequest()
+                var initRequest = new InitiateInstallmentPlanRequest()
                 {
                     PlanData = new PlanData(
                         amount: new MoneyWithCurrencyCode(amount, "USD"),
@@ -76,6 +78,58 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
                         succeeded: "https://www.success.com/",
                         failed: "https://www.ynet.co.il/",
                         canceled: "https://www.walla.com/")
+                };
+
+                using (var client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri("https://webapi.sandbox.splitit.com/");
+
+                    var json = JsonConvert.SerializeObject(new
+                    {
+                        PlanData = new PlanData(
+                            amount: new MoneyWithCurrencyCode(amount, "USD"),
+                            numberOfInstallments: numInstallments,
+                            attempt3DSecure: false),
+                        BillingAddress = billingAddress,
+                        ConsumerData = consumerModel,
+                        PaymentWizardData = new PaymentWizardData(
+                            requestedNumberOfInstallments: "1,2,4,6,8",
+                            isOpenedInIframe: false),
+                        RedirectUrls = new RedirectUrls(
+                            succeeded: "https://www.success.com/",
+                            failed: "https://www.ynet.co.il/",
+                            canceled: "https://www.walla.com/"),
+                        RequestHeader = new
+                        {
+                            ApiKey = this._configuration["SplititApiKey"],
+                            SessionId = loginResult.SessionId
+                        }
+                    });
+
+                    var data = new StringContent(json, Encoding.UTF8, "application/json");
+                    var result = await client.PostAsync("/api/InstallmentPlan/Initiate", data);
+
+                    var manualResponse = await result.Content.ReadAsStringAsync();
+                    return Json(new { loginResult, manual = manualResponse, result.Headers, result.StatusCode });
+
+                }
+
+                var installmentPlanApi = new InstallmentPlanApi(Configuration.Sandbox, sessionId: loginResult.SessionId);
+                var initResponse = installmentPlanApi.InstallmentPlanInitiate(new InitiateInstallmentPlanRequest()
+                {
+                    PlanData = new PlanData(
+                            amount: new MoneyWithCurrencyCode(amount, "USD"),
+                            numberOfInstallments: numInstallments,
+                            attempt3DSecure: false),
+                    BillingAddress = billingAddress,
+                    ConsumerData = consumerModel,
+                    PaymentWizardData = new PaymentWizardData(
+                            requestedNumberOfInstallments: "1,2,4,6,8",
+                            isOpenedInIframe: false),
+                    RedirectUrls = new RedirectUrls(
+                            succeeded: "https://www.success.com/",
+                            failed: "https://www.ynet.co.il/",
+                            canceled: "https://www.walla.com/")
                 });
 
                 return new JsonResult(initResponse, new Newtonsoft.Json.JsonSerializerSettings()
