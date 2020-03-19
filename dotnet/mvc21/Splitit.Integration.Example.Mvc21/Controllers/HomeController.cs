@@ -45,7 +45,7 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> FlexFieldsExample(decimal amount, int? numInstallments = null)
+        public async Task<JsonResult> FlexFieldsExample(decimal amount, int? numInstallments = null, string apiUser = "RANDOM", string apiPass = "RANDOM")
         {
             //LoginResponse loginResult = null;
 
@@ -59,8 +59,8 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
 
                     var json = JsonConvert.SerializeObject(new
                     {
-                        Username = this._configuration["SplititApiUsername"],
-                        Password = this._configuration["SplititApiPassword"]
+                        Username = apiUser,//this._configuration["SplititApiUsername"],
+                        Password = apiPass,//this._configuration["SplititApiPassword"]
                     });
 
                     var data = new StringContent(json, Encoding.UTF8, "application/json");
