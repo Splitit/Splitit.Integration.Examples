@@ -43,6 +43,8 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
         [HttpPost]
         public async Task<JsonResult> FlexFieldsExample(decimal amount, int? numInstallments = null)
         {
+            LoginResponse loginResult = null;
+
             try
             {
                 var billingAddress = new AddressData();
@@ -56,7 +58,7 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
                 var loginApi = new LoginApi(Configuration.Sandbox);
                 var request = new LoginRequest(userName: this._configuration["SplititApiUsername"], password: this._configuration["SplititApiPassword"]);
 
-                var loginResult = await loginApi.LoginPostAsync(request);
+                loginResult = await loginApi.LoginPostAsync(request);
 
                 var installmentPlanApi = new InstallmentPlanApi(Configuration.Sandbox, sessionId: loginResult.SessionId);
                 var initResponse = installmentPlanApi.InstallmentPlanInitiate(new InitiateInstallmentPlanRequest()
@@ -83,7 +85,11 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
             }
             catch(Exception ex)
             {
-                return Json(ex);
+                if (loginResult?.SessionId != null && loginResult?.SessionId.Length > 8)
+                {
+                    loginResult.SessionId = loginResult.SessionId.Substring(0, 8) + "....trimmed";
+                }
+                return Json(new { exception = ex, loginData = loginResult });
             }
             
         }
