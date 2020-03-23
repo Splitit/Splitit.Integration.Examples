@@ -12,13 +12,11 @@ COPY ["dotnet/mvc22/Splitit.Integration.Example.Mvc22/.", "Splitit.Integration.E
 RUN dotnet restore "Splitit.Integration.Example/Splitit.Integration.Example.Mvc22.csproj"
 COPY . .
 WORKDIR "/src/Splitit.Integration.Example"
-RUN ls
-RUN cp -f "./appsettings.SplititDemo.json" "./appsettings.json"
-RUN dotnet build "Splitit.Integration.Example.Mvc22.csproj" -c Release -o /app
+RUN dotnet build "Splitit.Integration.Example.Mvc22.csproj" -c SplititDemo -o /app
 #COPY ["Splitit.Web.LandingPages/cert-aspnetcore.pfx", "/app"]
 
 FROM build AS publish
-RUN dotnet publish "Splitit.Integration.Example.Mvc22.csproj" -c Release -o /app
+RUN dotnet publish "Splitit.Integration.Example.Mvc22.csproj" -c SplititDemo -o /app
 
 FROM base AS final
 WORKDIR /app

@@ -19,6 +19,14 @@ namespace Splitit.Integration.Example.Mvc21
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration((hostingContext, config) =>
+                {
+                    config.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+#if SPLITIT_DEMO
+                    config.AddJsonFile("appsettings.SplititDemo.json", optional: true, reloadOnChange: true);    
+#endif
+                    config.AddEnvironmentVariables();
+                })
                 .UseStartup<Startup>();
     }
 }

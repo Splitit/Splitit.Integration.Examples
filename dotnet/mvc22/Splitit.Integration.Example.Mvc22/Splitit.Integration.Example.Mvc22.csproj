@@ -2,6 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
+    <Configurations>Debug;Release;SplititDemo</Configurations>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='SplititDemo|AnyCPU'">
+    <DefineConstants>TRACE;SPLITIT_DEMO</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
