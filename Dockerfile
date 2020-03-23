@@ -13,7 +13,7 @@ RUN dotnet restore "Splitit.Integration.Example/Splitit.Integration.Example.Mvc2
 COPY . .
 WORKDIR "/src/Splitit.Integration.Example"
 RUN ls
-RUN cp -f "./appsettings.SpititDemo.json" "./appsettings.json"
+RUN cp -f "./appsettings.SplititDemo.json" "./appsettings.json"
 RUN dotnet build "Splitit.Integration.Example.Mvc22.csproj" -c Release -o /app
 #COPY ["Splitit.Web.LandingPages/cert-aspnetcore.pfx", "/app"]
 
