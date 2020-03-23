@@ -55,7 +55,7 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
 
                 using (var client = new HttpClient(logger))
                 {
-                    client.BaseAddress = new Uri("https://webapi.sandbox.splitit.com/");
+                    client.BaseAddress = new Uri("http://sandbox-splitit-web-api/");
 
                     var json = JsonConvert.SerializeObject(new
                     {
