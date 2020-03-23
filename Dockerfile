@@ -8,11 +8,11 @@ WORKDIR /src
 ARG BRANCH_NAME=master
 
 COPY ["dotnet/mvc22/Splitit.Integration.Example.Mvc22/.", "Splitit.Integration.Example/"]
-sed -i 's/https:\/\/webapi.sandbox.splitit.com/http:\/\/sandbox-splitit-web-api/' "Splitit.Integration.Example/appsettings.json"
 
 RUN dotnet restore "Splitit.Integration.Example/Splitit.Integration.Example.Mvc22.csproj"
 COPY . .
 WORKDIR "/src/Splitit.Integration.Example"
+RUN cp -f "appsettings.SpititDemo.json" "appsettings.json"
 RUN dotnet build "Splitit.Integration.Example.Mvc22.csproj" -c Release -o /app
 #COPY ["Splitit.Web.LandingPages/cert-aspnetcore.pfx", "/app"]
 
