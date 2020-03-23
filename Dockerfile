@@ -7,18 +7,17 @@ FROM mcr.microsoft.com/dotnet/core/sdk:2.2-stretch AS build
 WORKDIR /src
 ARG BRANCH_NAME=master
 
-COPY ["dotnet/mvc21/Splitit.Integration.Example.Mvc21/.", "Splitit.Integration.Example/"]
+COPY ["dotnet/mvc22/Splitit.Integration.Example.Mvc22/.", "Splitit.Integration.Example/"]
+sed -i 's/https:\/\/webapi.sandbox.splitit.com/http:\/\/sandbox-splitit-web-api/' "Splitit.Integration.Example/appsettings.json"
 
-
-
-RUN dotnet restore "Splitit.Integration.Example/Splitit.Integration.Example.Mvc21.csproj"
+RUN dotnet restore "Splitit.Integration.Example/Splitit.Integration.Example.Mvc22.csproj"
 COPY . .
 WORKDIR "/src/Splitit.Integration.Example"
-RUN dotnet build "Splitit.Integration.Example.Mvc21.csproj" -c Release -o /app
+RUN dotnet build "Splitit.Integration.Example.Mvc22.csproj" -c Release -o /app
 #COPY ["Splitit.Web.LandingPages/cert-aspnetcore.pfx", "/app"]
 
 FROM build AS publish
-RUN dotnet publish "Splitit.Integration.Example.Mvc21.csproj" -c Release -o /app
+RUN dotnet publish "Splitit.Integration.Example.Mvc22.csproj" -c Release -o /app
 
 FROM base AS final
 WORKDIR /app
@@ -27,4 +26,4 @@ ENV ASPNETCORE_HTTPS_PORT=443
 ENV ASPNETCORE_Kestrel__Certificates__Default__Password="123456" 
 ENV ASPNETCORE_Kestrel__Certificates__Default__Path=./certs/domain.pfx 
 COPY --from=publish /app .
-ENTRYPOINT ["dotnet", "Splitit.Integration.Example.Mvc21.dll"]
+ENTRYPOINT ["dotnet", "Splitit.Integration.Example.Mvc22.dll"]

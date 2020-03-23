@@ -2,22 +2,6 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="row">
-    <div class="col-md-4">
-        <div class="form-group">
-            <label class="control-label">Username</label>
-            <input type="text" id="txtUser" class="form-control" />
-        </div>
-        <div class="form-group">
-            <label class="control-label">Pass</label>
-            <input type="password" id="txtPass" class="form-control" />
-        </div>
-        <div>
-            <button type="button" class="btn btn-primary" id="btnInit" value="Init">Init</button>
-        </div>
-    </div>
-</div>
-
 <div class="text-left">
     <h1 class="display-4">Welcome</h1>
     <div data-splitit="true"
@@ -96,26 +80,13 @@
         }
     }).ready(function () {
         var splititFlexFields = this;
-        $("#btnInit").on('click', function () {
-            performInit();
-        });
-
-    }).onSuccess(function (result) {
-        // Respond here if everything goes well.
-        alert('Payment was successful! Check console for result details.');
-        console.log(result);
-    });
-
-        function performInit() {
-            $.ajax({
+        $.ajax({
             url: '/Home/FlexFieldsExample',
             method: "post",
             data: {
                 __RequestVerificationToken: $('@Html.AntiForgeryToken()').val(),
                 amount: @ViewBag.Amount,
                 numInstallments: null,
-                apiUser: $("#txtUser").val(),
-                apiPass: $("#txtPass").val(),
                 billingAddress: {
                     AddressLine: "260 Madison Avenue.",
                     AddressLine2: "Appartment 1",
@@ -132,10 +103,15 @@
                 }
             },
             success: function (data) {
-                flexFieldsInstance.set(data);
+                splititFlexFields.set(data);
             }
         });
-        }
+
+    }).onSuccess(function (result) {
+        // Respond here if everything goes well.
+        alert('Payment was successful! Check console for result details.');
+        console.log(result);
+    });
 
     </script>
 

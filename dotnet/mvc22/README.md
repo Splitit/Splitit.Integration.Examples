@@ -1,10 +1,10 @@
-# Splitit integration for ASP.NET MVC Core 2.1
+# Splitit integration for ASP.NET MVC Core 2.2
 
 ## Getting Started
 
 ### Prerequisites
 - Visual Studio 2017 or 2019, or VSCode
-- .NET Core 2.1
+- .NET Core 2.2
 - ASP.NET Core development environment
 
 ### Configuration
