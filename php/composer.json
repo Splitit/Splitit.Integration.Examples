@@ -1,0 +1,7 @@
+{
+    "name": "splitit/flexdemo",
+    "description": "Splitit FlexFields example PHP implementation",
+    "require": {
+        "splitit/sdk": "^1.4"
+    }
+}
