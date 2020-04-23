@@ -4,3 +4,13 @@ resources:
     memory: 200Mi
   limits:
     memory: 1Gi
+
+ingress:
+  enabled: true
+  type: internal
+  rules:
+  - hosts:
+    - examples.dev.splitit.com
+    paths:
+    - /*
+    port: https

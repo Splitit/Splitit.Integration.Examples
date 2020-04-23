@@ -7,4 +7,14 @@ resources:
 
 hpa:
   minReplicas: 3
-  maxReplicas: 12
+  maxReplicas: 6
+
+ingress:
+  enabled: true
+  type: external
+  rules:
+  - hosts:
+    - examples.production.splitit.com
+    paths:
+    - /*
+    port: https
