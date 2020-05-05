@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json.Serialization;
@@ -85,7 +86,9 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
             }
             catch(Exception ex)
             {
-                return Json(ex);
+                var result = Json(ex);
+                result.StatusCode = StatusCodes.Status400BadRequest;
+                return result;
             }
             
         }
