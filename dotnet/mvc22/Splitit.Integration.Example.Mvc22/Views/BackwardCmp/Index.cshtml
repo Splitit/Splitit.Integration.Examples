@@ -1,0 +1,83 @@
+﻿@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Splitit Flex Fields Test : Backward Compatibility (old flow)";
+}
+
+<h1 class="display-4">@ViewData["Title"]</h1>
+<div>
+    <a asp-action="Index" asp-controller="Home">Back to Home</a>
+</div>
+<div style="margin-bottom: 20px;">
+    Upstream loads from: @ViewBag.UpstreamUrlRoot <br />
+    Flex Fields loads from: @ViewBag.FlexFieldsUrlRoot <br />
+</div>
+
+<ul>
+    <li>
+        <strong>Minimal setup:</strong>
+
+        @for(int i = 1; i <= 13; i++){
+            <a asp-action="Minimal" asp-route-options="@i">@i options</a>   
+        }
+    </li>
+    <li>
+        <strong>Separate year and month:</strong>
+        <a asp-action="SeparateYearMonth">8 options, amount = 2757</a>   
+    </li>
+    <li>
+        <strong>3D secure:</strong>
+        <a asp-action="Secure3D">3 options, amount = 9300.75</a>   
+    </li>
+    <li>
+        <strong>Ugly, custom installment picker:</strong>
+        <a asp-action="CustomInstallmentPicker">4 custom options, amount = 1000</a>   
+    </li>
+    <li>
+        <strong>Existing, bootstrap themed page:</strong>
+        <a asp-action="BootstrapThemed">4 options (slider), amount = 1100</a>   
+    </li>
+    <li>
+        <strong>Combined with upstream messaging:</strong>
+        <a asp-action="WithUpstream">Example with upstream messaging plugin.</a>   
+    </li>
+    <li>
+        <strong>Custom 'pay' button + installment picker fixed:</strong>
+        <a asp-action="CustomPaymentBtn">3 options (dropdown), amount = 500</a>   
+    </li>
+    <li>
+        <strong>Non-grouped design:</strong>
+        <a asp-action="NonGrouped">1 options, amount = 1500</a>   
+    </li>
+    <li>
+        <strong>Default UI styled:</strong>
+        <a asp-action="DefaultUiStyling">5 options, amount = 1500</a>   
+    </li>
+    <li>
+        <strong>Security:</strong>
+        <a asp-action="Security">Showing all messages received and readable by the host window.</a>   
+    </li>
+    <li>
+        <strong>Payment schedule JS:</strong>
+        <a asp-action="PaymentScheduleJS">Testing payment schedule JS independent component.</a>   
+    </li>
+    <li>
+        <strong>Validates parsing with PascalCase:</strong>
+        <a asp-action="PascalCase">Parsing data if server returns PascalCase for /Init.</a>   
+    </li>
+    <li>
+        <strong>Show Flex Fields on-demand:</strong>
+        <a asp-action="ShowOnDemand">Previously hidden, shows on button click.</a>   
+    </li>
+    <li>
+        <strong>Flex fields demo mode:</strong>
+        <a asp-action="Demo">For showing purposes only (no backend).</a>   
+    </li>
+    <li>
+        <strong>With payment verification:</strong>
+        <a asp-action="VerifyPayment">Includes additional server side call to verify payment.</a>   
+    </li>
+    <li>
+        <strong>SPA:</strong>
+        <a asp-action="SPA">Test single page apps - mulitple initialization.</a>   
+    </li>
+</ul>

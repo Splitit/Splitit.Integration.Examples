@@ -1,0 +1,80 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title></title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="//cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" />
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="//cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+
+    @* <script src="https://hosted.sandbox.splitit.com/js/dist/splitit.payment-schedule-calculator.js?v=@(System.DateTime.Now.Ticks/1000000000)"></script> *@
+    <script src="/js/dist/splitit.payment-schedule-calculator.js?v=@(System.DateTime.Now.Ticks/1000000000)"></script>
+
+</head>
+<body>
+
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="txtAmount">Amount</label>
+            <input type="text" oninput="update()" class="form-control" id="txtAmount" placeholder="Enter amount">
+        </div>
+        <div class="form-group">
+            <label for="numInstallments">Num. of installments</label>
+            <input type="text" oninput="update()" class="form-control" id="numInstallments" placeholder="Number of installments">
+        </div>
+    </div>
+</div>
+
+ <div class="row">
+     <div class="col-md-12">
+        <table id="schedule-tbl" class="table">
+             <thead>
+                 <tr>
+                     <td>Date</td>
+                     <td>Amount</td>
+                 </tr>
+             </thead>
+             <tbody>
+
+             </tbody>
+         </table>
+     </div>
+ </div>
+    <script>
+        var existing = null;
+
+        function update(){
+            var amount = parseInt($("#txtAmount").val());
+            var numOfInst = parseInt($("#numInstallments").val());
+
+            if (existing) {
+                existing.destroy();
+            }
+
+            var schedule = Splitit.PaymentSchedule.get(amount, numOfInst).map(function(p){
+                    return {
+                        date: new Date(p.date).toLocaleDateString(),
+                        amount: p.amount
+                    };
+                });
+            existing = $('#schedule-tbl').DataTable({
+                data: schedule,
+                columns: [
+                    { data: "date" },
+                    { data: "amount" }
+                ]
+            });
+        }
+
+    </script>   
+    
+</body>
+</html>

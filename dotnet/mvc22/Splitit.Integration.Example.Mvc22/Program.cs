@@ -22,6 +22,7 @@ namespace Splitit.Integration.Example.Mvc21
                 .ConfigureAppConfiguration((hostingContext, config) =>
                 {
                     config.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                    config.AddJsonFile($"appsettings.{hostingContext.HostingEnvironment.EnvironmentName}.json", optional: true, reloadOnChange: true);                    
 #if SPLITIT_DEMO
                     config.AddJsonFile("appsettings.SplititDemo.json", optional: true, reloadOnChange: true);    
 #endif

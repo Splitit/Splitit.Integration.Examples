@@ -1,0 +1,114 @@
+﻿@model CommonTestModel
+@{
+    ViewData["Title"] = "Flex Fields - Bootstrap themed page with custom error box";
+    var amount = 1000;
+}
+
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+<h1>@ViewData["Title"]</h1>
+
+<img data-splitit-placeholder="banner" data-splitit-banner="white:use-cc-pay-over-time" width="728" />
+
+<div data-splitit="true"
+    data-splitit-amount="@amount"
+    data-splitit-num-installments="3"
+    data-splitit-type="product-description">
+</div>
+
+<button type="button" onclick="openPaymentForm()" style="margin: 20px;">Pay with Splitit</button>
+
+<div id="payment-form" style="display:none;">
+    <div class="splitit-default-ui grouped">
+        <div class="splitit-cc-group">
+            <div id="card-number"></div>
+            <div id="expiration-date"></div>
+            <div id="cvv"></div>
+            <div class="splitit-cc-group-separator"></div>
+        </div>
+
+        <div id="installment-picker"></div>
+        <div id="error-box" class="alert alert-danger" style="display: none;">
+            <ul></ul>
+        </div>
+        <div id="terms-conditions"></div>
+        <button id="btn-pay"></button>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <script>
+        (function(i,s,o,g,r,a,m){i['SplititObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window, document, 'script', '//upstream.sandbox.splitit.com/v1/dist/upstream-messaging.js?v='+(Math.ceil(new Date().getTime()/100000)), 'splitit');
+        splitit('init', { merchantid: 'YYXXXXXXXX', lang: 'en', currency: 'USD', currencySymbol: '$', debug: false });
+    </script>
+
+    <script>
+        function openPaymentForm(){
+            $("#payment-form").show();
+            Splitit.FlexFields.setup({
+                fields: {
+                    number: {
+                        selector: "#card-number"
+                    },
+                    cvv: {
+                        selector: "#cvv"
+                    },
+                    expirationDate: {
+                        selector: "#expiration-date"
+                    }
+                },
+                installmentPicker: {
+                    selector: "#installment-picker"
+                },
+                termsConditions: {
+                    selector: "#terms-conditions"
+                },
+                paymentButton: {
+                    selector: "#btn-pay"
+                }
+            }).ready(function () {
+                var splititFlexFields = this;
+
+                $.ajax({
+                    url: '@Url.Action("AjaxInitiate", "BackwardCmp")',
+                    method: "post",
+                    data: {
+                        __RequestVerificationToken: $('@Html.AntiForgeryToken()').val(),
+                        amount: @amount,
+                        numOptions: 5,
+                        numInstallments: null,
+                        billingAddress: {
+                            AddressLine: "260 Madison Avenue.",
+                            AddressLine2: "Appartment 1",
+                            City: "New York",
+                            State: "NY",
+                            Country: "USA",
+                            Zip: "10016"
+                        },
+                        consumerModel: {
+                            FullName: "John Smith",
+                            Email: "JohnS@splitit.com",
+                            PhoneNumber: "1-844-775-4848",
+                            CultureName: "en-us"
+                        }
+                    },
+                    success: function (data) {
+                        splititFlexFields.set(data);
+                    }
+                });
+                
+            }).onSuccess(function (result) {
+                // Respond here if everything goes well.
+                alert('Payment was successful! Check console for result details.');
+                console.log(result);
+            });
+        }
+
+    </script>
+}

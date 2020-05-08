@@ -1,0 +1,84 @@
+﻿@model CommonTestModel
+@{
+    ViewData["Title"] = "Flex Fields - Basic flow";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div>
+    <button type="button" style="padding: 10px; margin-bottom: 10px;" onclick="flexFieldsInstance.toggle()">Choose Splitit Payment Option</button>
+</div>
+
+<div class="splitit-default-ui grouped" id="splitit-card-data">
+    <div class="splitit-cc-group">
+        <div id="card-number"></div>
+        <div id="expiration-date"></div>
+        <div id="cvv"></div>
+        <div class="splitit-cc-group-separator"></div>
+    </div>
+
+    <div id="installment-picker"></div>
+    <div id="error-box"></div>
+    <div id="terms-conditions"></div>
+    <button id="btn-pay"></button>
+</div>
+
+@section Scripts {
+    <script>
+        var flexFieldsInstance = Splitit.FlexFields.setup({
+            debug: true,
+            publicToken: '@Model.PublicToken',
+            container: '#splitit-card-data',
+            fields: {
+                number: {
+                    selector: "#card-number"
+                },
+                cvv: {
+                    selector: "#cvv"
+                },
+                expirationDate: {
+                    selector: "#expiration-date"
+                }
+            },
+            installmentPicker: {
+                selector: "#installment-picker"
+            },
+            termsConditions: {
+                selector: "#terms-conditions"
+            },
+            errorBox: {
+                selector: "#error-box"
+            },
+            paymentButton: {
+                selector: "#btn-pay"
+            }
+        }).ready(function () {
+            var splititFlexFields = this;
+
+            splititFlexFields.updateDetails({
+                billingAddress: {
+                    AddressLine: "260 Madison Avenue.",
+                    AddressLine2: "Appartment 1",
+                    City: "New York",
+                    State: "NY",
+                    Country: "USA",
+                    Zip: "10016"
+                },
+                consumerData: {
+                    FullName: "John Smith",
+                    Email: "JohnS@splitit.com",
+                    PhoneNumber: "1-844-775-4848",
+                    CultureName: "en-us"
+                }
+            });
+        }).onSuccess(function (result) {
+            // Respond here if everything goes well.
+            alert('Payment was successful! Check console for result details.');
+            console.log(result);
+        });
+
+        function showSplititForm(){
+            flexFieldsInstance.toggle();
+        }
+    </script>
+}

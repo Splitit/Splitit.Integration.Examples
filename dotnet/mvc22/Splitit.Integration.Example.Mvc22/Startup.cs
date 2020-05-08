@@ -48,7 +48,6 @@ namespace Splitit.Integration.Example.Mvc21
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
 

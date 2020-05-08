@@ -1,0 +1,110 @@
+﻿@model CommonTestModel
+
+@{
+    ViewData["Title"] = "Flex Fields - Bootstrap themed page with custom error box";
+}
+
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="row">
+    <div class="col-md-5 col-md-offset-5">
+        <div class="splitit-default-ui grouped">
+            <div class="splitit-cc-group">
+                <div id="card-number"></div>
+                <div id="expiration-date"></div>
+                <div id="cvv"></div>
+                <div class="splitit-cc-group-separator"></div>
+            </div>
+
+            <div id="installment-picker"></div>
+            <div id="error-box" class="alert alert-danger" style="display: none;">
+                <ul></ul>
+            </div>
+            <div id="terms-conditions"></div>
+            <button id="btn-pay"></button>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+        var ff = Splitit.FlexFields.setup({
+            fields: {
+                number: {
+                    selector: "#card-number"
+                },
+                cvv: {
+                    selector: "#cvv"
+                },
+                expirationDate: {
+                    selector: "#expiration-date"
+                }
+            },
+            installmentPicker: {
+                selector: "#installment-picker",
+            },
+            termsConditions: {
+                selector: "#terms-conditions"
+            },
+            paymentButton: {
+                selector: "#btn-pay"
+            }
+        }).ready(function () {
+            var splititFlexFields = this;
+
+            $.ajax({
+                url: '@Url.Action("AjaxInitiate", "BackwardCmp")',
+                method: "post",
+                data: {
+                    __RequestVerificationToken: $('@Html.AntiForgeryToken()').val(),
+                    amount: 1100,
+                    numInstallments: null,
+                    numOptions: 5,
+                    billingAddress: {
+                        AddressLine: "260 Madison Avenue.",
+                        AddressLine2: "Appartment 1",
+                        City: "New York",
+                        State: "NY",
+                        Country: "USA",
+                        Zip: "10016"
+                    },
+                    consumerModel: {
+                        FullName: "John Smith",
+                        Email: "JohnS@splitit.com",
+                        PhoneNumber: "1-844-775-4848",
+                        CultureName: "en-us"
+                    }
+                },
+                success: function (data) {
+                    splititFlexFields.set(data);
+                }
+            });
+            
+        }).onSuccess(function (result) {
+            // Respond here if everything goes well.
+            alert('Payment was successful! Check console for result details.');
+            console.log(result);
+        }).onError(function (result) {
+            console.log(result);
+            $("#error-box").find('ul').html('');
+            for(var i = 0; i < result.fieldErrors.length; i++){
+                $("<li>" + result.fieldErrors[i] + "</li>").appendTo($("#error-box").find('ul'));
+            }
+            for(var i = 0; i < result.otherErrors.length; i++){
+                // Possible to react to specific error codes by accessing result.otherErrors[i].errorCode
+                $("<li>" + result.otherErrors[i].message + "</li>").appendTo($("#error-box").find('ul'));
+            }
+
+            if (result.hasErrors){
+                $("#error-box").show();
+            } else {
+                $("#error-box").hide();
+            }
+            
+        });
+
+    </script>
+}

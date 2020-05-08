@@ -39,12 +39,16 @@
                     <li>
                         <a href="https://upstream.sandbox.splitit.com/v1/integration-wiki.html">Upstream</a>
                     </li>
+                    <li>
+                        <a asp-controller="Scenario" asp-action="Index">Scenario Examples</a>
+                    </li>
+                    <li>
+                        <a asp-controller="BackwardCmp" asp-action="Index">Tests (backward comp.)</a>
+                    </li>
                 </ul>
             </div>
         </div>
     </nav>
-
-    <partial name="_CookieConsentPartial" />
 
     <div class="container body-content">
         @RenderBody()

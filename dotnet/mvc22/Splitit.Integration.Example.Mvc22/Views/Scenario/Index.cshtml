@@ -1,0 +1,47 @@
+﻿@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Splitit Flex Fields: Scenario examples";
+}
+
+<h1 class="display-4">@ViewData["Title"]</h1>
+<div>
+    <a asp-action="Index" asp-controller="Home">Back to Home</a>
+</div>
+<div style="margin-bottom: 20px;">
+    Upstream loads from: @ViewBag.UpstreamUrlRoot <br />
+    Flex Fields loads from: @ViewBag.FlexFieldsUrlRoot <br />
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Scenario
+            </th>
+            <th>
+                Parameters
+            </th>
+            <th>
+
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                Basic
+            </td>
+            <td>
+                <form class="form-inline" asp-action="Basic" method="GET">
+                    <label>Options</label>
+                    <input type="text" class="form-control" placeholder="Num. options" value="5" name="options">
+                    <label>Amount</label>
+                    <input type="text" class="form-control" placeholder="Num. options" value="400" name="amount">
+                </form>
+            </td>
+            <td>
+                <a class="btn btn-primary" onclick="$(this).closest('tr').find('form').submit();">Run</a>
+            </td>
+        </tr>
+    </tbody>
+</table>

@@ -1,0 +1,55 @@
+﻿@model CommonTestModel
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title></title>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+</head>
+<body>
+
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+<link rel="stylesheet" href="//cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" />
+
+ <div class="row">
+     <div class="col-md-12">
+        <table id="message-wrap" class="table">
+             <thead>
+                 <tr>
+                     <td>Message content</td>
+                 </tr>
+             </thead>
+             <tbody>
+
+             </tbody>
+         </table>
+     </div>
+ </div>
+
+
+
+<script src="//cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+    <script>
+        var messageHashMap = {};
+        var tbl = $("#message-wrap").DataTable();
+
+        window.addEventListener("message", function(ev){
+            let msg = JSON.stringify(ev.data);
+            console.log(msg);
+            if (!messageHashMap[msg]){
+                messageHashMap[msg] = 1;
+                tbl.row.add([msg]).draw();
+            }
+        }, false);
+
+        document.domain = "splitit.com";
+        //window.document.location = "https://hosted.sandbox.splitit.com/formfieldcollector.html";
+
+    </script>   
+    
+</body>
+</html>

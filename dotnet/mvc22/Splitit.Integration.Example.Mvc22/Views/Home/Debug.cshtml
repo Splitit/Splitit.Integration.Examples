@@ -1,0 +1,264 @@
+﻿@model DebugViewModel
+@{
+    Layout = null;
+    ViewData["Title"] = "Flex Fields - Debug";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Flex fields debug</title>
+</head>
+<body>
+   
+    <div class="container">
+        <main role="main" class="pb-3">
+            <h1>Flex fields - Demo</h1>
+
+            @* <h2>Consumer data</h2>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Amount</label>
+                        <input type="number" class="form-control" id="amount">
+                    </div>
+                    <div class="form-group">
+                        <label>Num of installments</label>
+                        <input type="number" class="form-control" id="num-installments">
+                    </div>
+                </div>
+            </div> *@
+
+            <h2>Credit card data</h2>
+            <div class="splitit-default-ui grouped" id="splitit-container">
+                <div class="splitit-cc-group">
+                    <div id="card-number"></div>
+                    <div id="cvv"></div>
+                    @* <div id="expiration-month"></div> *@
+                    @* <div id="expiration-year"></div> *@
+                    <div id="expiration-date"></div>
+                    <div class="splitit-cc-group-separator"></div>
+                </div>
+                
+                <div id="installment-picker"></div>
+                <div id="payment-schedule"></div>
+
+                @* <div>
+                    <select id="num-installments-selector" onchange="numInstallmentsPicked(this)">
+                        <option value="1">One installment</option>
+                        <option value="2" selected="true">Two installments</option>
+                        <option value="6">Six installments</option>
+                        <option value="12">Many installments</option>
+                    </select>
+                </div> *@
+
+                <div id="error-box"></div>
+
+                <div id="terms-conditions"></div>
+
+                <div id="success-box" style="display:none;" class="alert alert-success">Operation completed successfully!</div>
+
+                <button id="btn-pay"></button>
+            </div>
+        </main>
+    </div>
+
+    <button type="button" value="Change amount" onclick="changeAmount()">Change amount</button>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2019 - Splitit.FlexFields.Web - <a asp-area="" asp-page="/Privacy">Privacy</a>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    <link rel="stylesheet" type="text/css"
+          href="@ViewBag.FlexFieldsUrlRoot/css/splitit.flex-fields.min.css?v=@(System.DateTime.Now.Ticks)">
+    <script src="@ViewBag.FlexFieldsUrlRoot/js/dist/splitit.flex-fields.sdk.js?v=@(System.DateTime.Now.Ticks)">
+    </script>
+
+
+    <button type="button" value="Re-init" onclick="initFlexFields()">Reinit FF</button>
+    <button type="button" value="Re-init" onclick="toggleSplitit()">Pay with Splitit???</button>
+    <button type="button" value="Update billing" onclick="updateBilling()">Update billing</button>
+    
+    <script>
+        function enablePayButton() {
+            $("#btn-pay .spinner-border").addClass('d-none');
+            $("#btn-pay").removeAttr('disabled', true);
+        }
+
+        var hf = null;
+        initFlexFields();
+
+        function toggleSplitit(){
+            hf.toggle();
+        }
+
+        function updateBilling(){
+            hf.updateDetails({
+                billingAddress: {
+                    AddressLine: "260 Madison Avenue.",
+                    AddressLine2: "Appartment 11b",
+                    City: "New York City",
+                    State: "NY",
+                    Country: "USA",
+                    Zip: "10017"
+                },
+                consumerData: {
+                    FullName: "Dalibor Smith",
+                    Email: "dalibor@splitit.com",
+                    PhoneNumber: "1-844-775-4848",
+                    CultureName: "de-DE"
+                }
+            });
+        }
+
+        function initFlexFields(){
+            hf = Splitit.FlexFields.setup({
+                container: "#splitit-container",
+                publicToken: "@Model.PublicToken",
+                //culture: 'de-DE',
+                //useSandboxApi: true, -> use this flag when connecting to production version of flex fields, but still would like to use sandbox API.
+                fields: {
+                    number: {
+                        selector: "#card-number"
+                    },
+                    cvv: {
+                        selector: "#cvv"
+                    },
+                    expirationDate: {
+                        selector: "#expiration-date"
+                    },
+                    //expirationMonth: {
+                    //    selector: "#expiration-month"
+                    //},
+                    //expirationYear: {
+                    //    selector: "#expiration-year"
+                    //},
+                },
+                billingAddress: {
+                    AddressLine: "260 Madison Avenue.",
+                    AddressLine2: "Appartment 1",
+                    City: "New York",
+                    State: "NY",
+                    Country: "USA",
+                    Zip: "10016"
+                },
+                consumerData: {
+                    FullName: "John Smith",
+                    Email: "JohnS@splitit.com",
+                    PhoneNumber: "1-844-775-4848",
+                    CultureName: "de-DE"
+                },
+                installmentPicker: {
+                    selector: "#installment-picker",
+                    //options: @Html.Raw(Model.InstallmentOptions),
+                    //ui: "auto",
+                    //amount: 1000,
+                    showPaymentSchedule: true
+                },
+                termsConditions: {
+                    selector: "#terms-conditions"
+                },
+                errorBox: {
+                    selector: "#error-box"
+                },
+                __paymentSchedule: {
+                    selector: "#payment-schedule"
+                },
+                paymentButton: {
+                    selector: "#btn-pay",
+                    // can be omitted
+                    onClick: function(btn, flexFieldsInstance){
+                        flexFieldsInstance.checkout();
+                    }
+                }
+            }).ready(function () {
+                return;
+
+                var splititFlexFields = this;
+
+                $.ajax({
+                    url: '/HostDebug?handler=Initiate',
+                    method: "post",
+                    data: {
+                        __RequestVerificationToken: $('@Html.AntiForgeryToken()').val(),
+                        amount: 380,
+                        numInstallments: null,
+                        numOptions: @(Model.InstallmentOptions.Count(p => p == ',') + 1),
+                        /*billingAddress: {
+                            AddressLine: "260 Madison Avenue.",
+                            AddressLine2: "Appartment 1",
+                            City: "New York",
+                            State: "NY",
+                            Country: "USA",
+                            Zip: "10016"
+                        },
+                        consumerModel: {
+                            FullName: "John Smith",
+                            Email: "JohnS@splitit.com",
+                            PhoneNumber: "1-844-775-4848",
+                            CultureName: "de-DE"
+                        }*/
+                    },
+                    success: function (data) {
+                        //alert('uspjeh');
+                        //splititFlexFields.set(data);
+                        //splititFlexFields.setPrivacyPolicyUrl("https://www.splitit.com");
+                        //splititFlexFields.setTermsConditionsUrl("https://www.splitit.com");
+                        splititFlexFields.setPublicToken(data.publicToken);
+                        //splititFlexFields.setInstallmentPlanNumber(data.installmentPlan.installmentPlanNumber);
+                        //splititFlexFields.set({
+                        //    areTermsAndConditionsApproved: true
+                        //});
+                        //splititFlexFields.checkout();
+                    }
+                });
+                
+            }).onRequire3ds1(function (result) {
+                // Here it is possible to announce to merchant that he will be redirected to 3D confirmation page.
+                console.log('3Ds1 process initiated...');
+                console.log(result);
+                this.redirect3ds1(result);
+            }).onSuccess(function (result) {
+                // Respond here if everything goes well.
+                enablePayButton();
+                $("#success-box").show();
+                console.log(result);
+            }).onError(function (result) {
+                console.log(result);
+                // Respond here if some error ocurrs. The following is just an example.
+                // For full list of errors, visit <splitit-help-page>
+                @* enablePayButton();
+                console.error(result);
+                if (result.errors.length == 1) {
+                    $("#error-box").html(result.errors[0].Message);
+                } else {
+                    $("#error-box").html('<ul></ul>');
+                    for (var i = 0; i < result.errors.length; i++) {
+                        $("#error-box ul").append('<li>' + result.errors[i].Message + '</li>');
+                    }
+                }
+                $("#error-box").show(); *@
+            });
+        }
+        
+        
+        
+        var curAmount = 1000;
+        function changeAmount(){
+            curAmount += 200;
+            hf.updatePickerAmount(curAmount);
+        }
+
+        function numInstallmentsPicked(sender){
+            hf.setNumInstallments(parseInt($(sender).val()));
+        }
+
+    </script>
+</body>
+</html>

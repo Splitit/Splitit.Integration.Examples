@@ -1,0 +1,136 @@
+﻿@{
+    ViewData["Title"] = "Flex Fields - Security overview";
+}
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+<link rel="stylesheet" href="//cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" />
+
+<h1>@ViewData["Title"]</h1>
+
+ <div class="row">
+     <div class="col-md-4">
+        <div class="splitit-default-ui grouped">
+            <div class="splitit-cc-group">
+                <div id="card-number"></div>
+                <div id="expiration-date"></div>
+                <div id="cvv"></div>
+                <div class="splitit-cc-group-separator"></div>
+            </div>
+            
+            <div id="installment-picker"></div>
+            <div id="error-box"></div>
+            <div id="terms-conditions"></div>
+            <button id="btn-pay"></button>
+        </div>
+     </div>
+     <div class="col-md-8">
+         <table id="message-wrap" class="table">
+             <thead>
+                 <tr>
+                     <td>Message content</td>
+                 </tr>
+             </thead>
+             <tbody>
+
+             </tbody>
+         </table>
+     </div>
+ </div>
+ <div class="row">
+     <div class="col-md-3">
+         <button type="button" class="btn btn-danger" onclick="loadAttacker();" value="Load attacker frame">Load attacker frame</button>
+         <script>
+             function loadAttacker(){
+                 let frm = document.createElement('iframe');
+                 frm.src="/BackwardCmp/Attacker";
+                 frm.width = "100%";
+                 frm.height = "500px";
+                 frm.name = "splitit-hf-collector";
+
+                 $("iframe[name=splitit-hf-collector]").remove();
+
+                 $("#attacker-wrapper").append(frm);
+             }
+         </script>
+     </div>
+ </div>
+ <div id="attacker-wrapper"></div>
+
+
+
+@section Scripts {
+    <script src="//cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+    <script>
+        var ff = Splitit.FlexFields.setup({
+            fields: {
+                number: {
+                    selector: "#card-number"
+                },
+                cvv: {
+                    selector: "#cvv"
+                },
+                expirationDate: {
+                    selector: "#expiration-date"
+                }
+            },
+            installmentPicker: {
+                selector: "#installment-picker"
+            },
+            termsConditions: {
+                selector: "#terms-conditions"
+            },
+            errorBox: {
+                selector: "#error-box"
+            },
+            paymentButton: {
+                selector: "#btn-pay"
+            }
+        }).ready(function () {
+            var splititFlexFields = this;
+
+            $.ajax({
+                url: '@Url.Action("AjaxInitiate", "BackwardCmp")',
+                method: "post",
+                data: {
+                    __RequestVerificationToken: $('@Html.AntiForgeryToken()').val(),
+                    amount: 1500,
+                    numOptions: 3,
+                    numInstallments: null,
+                    billingAddress: {
+                        AddressLine: "260 Madison Avenue.",
+                        AddressLine2: "Appartment 1",
+                        City: "New York",
+                        State: "NY",
+                        Country: "USA",
+                        Zip: "10016"
+                    },
+                    consumerModel: {
+                        FullName: "John Smith",
+                        Email: "JohnS@splitit.com",
+                        PhoneNumber: "1-844-775-4848",
+                        CultureName: "en-us"
+                    }
+                },
+                success: function (data) {
+                    splititFlexFields.set(data);
+                }
+            });
+            
+        }).onSuccess(function (result) {
+            // Respond here if everything goes well.
+            alert('Payment was successful! Check console for result details.');
+            console.log(result);
+        });
+
+        var messageHashMap = {};
+        var tbl = $("#message-wrap").DataTable();
+
+        window.addEventListener("message", function(ev){
+            let msg = JSON.stringify(ev.data);
+            if (!messageHashMap[msg]){
+                messageHashMap[msg] = 1;
+                tbl.row.add([msg]).draw();
+            }
+        }, false);
+
+    </script>
+}

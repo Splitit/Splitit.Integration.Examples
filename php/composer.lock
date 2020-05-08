@@ -287,16 +287,16 @@
         },
         {
             "name": "splitit/sdk",
-            "version": "1.4.1",
+            "version": "1.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Splitit/Splitit.SDKs.php.git",
-                "reference": "b09015d55613d163e9e7eb1f25b0909dbfba2e93"
+                "reference": "e81da2a97ccc718fee5699048c0770abebd38c2f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Splitit/Splitit.SDKs.php/zipball/b09015d55613d163e9e7eb1f25b0909dbfba2e93",
-                "reference": "b09015d55613d163e9e7eb1f25b0909dbfba2e93",
+                "url": "https://api.github.com/repos/Splitit/Splitit.SDKs.php/zipball/e81da2a97ccc718fee5699048c0770abebd38c2f",
+                "reference": "e81da2a97ccc718fee5699048c0770abebd38c2f",
                 "shasum": ""
             },
             "require": {
@@ -334,7 +334,7 @@
                 "sdk",
                 "splitit"
             ],
-            "time": "2020-03-30T13:14:48+00:00"
+            "time": "2020-04-06T10:46:37+00:00"
         }
     ],
     "packages-dev": [],

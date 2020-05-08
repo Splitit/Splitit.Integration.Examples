@@ -1,9 +1,8 @@
 ﻿@{
-    ViewData["Title"] = "Flex Fields Demo";
+    ViewData["Title"] = "Flex Fields Example";
 }
 
-<div class="text-left">
-    <h1 class="display-4">Welcome</h1>
+<div class="text-left" style="margin-top: 20px;">
     <div data-splitit="true"
         data-splitit-amount="100"
         data-splitit-num-installments="3"
@@ -35,12 +34,11 @@
     
 </div>
 
-
 @section Scripts {
 
     <link rel="stylesheet" type="text/css"
-          href="https://hosted.sandbox.splitit.com/css/splitit.flex-fields.min.css?v=@(System.DateTime.Now.Ticks/1000000000)">
-    <script src="https://hosted.sandbox.splitit.com/js/dist/splitit.flex-fields.sdk.js?v=@(System.DateTime.Now.Ticks/1000000000)">
+          href="@ViewBag.FlexFieldsUrlRoot/css/splitit.flex-fields.min.css?v=@(System.DateTime.Now.Ticks/1000000000)">
+    <script src="@ViewBag.FlexFieldsUrlRoot/js/dist/splitit.flex-fields.sdk.js?v=@(System.DateTime.Now.Ticks/1000000000)">
     </script>
 
     <script>
@@ -49,8 +47,8 @@
             (i[r].q = i[r].q || []).push(arguments)
         }, i[r].l = 1 * new Date(); a = s.createElement(o),
             m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
-        })(window, document, 'script', '//upstream.sandbox.splitit.com/v1/dist/upstream-messaging.js?v=' + (Math.ceil(new Date().getTime() / 100000)), 'splitit');
-        splitit('init', { merchantid: '@ViewBag.UpstreamMerchantId', lang: 'en', currency: 'USD', currencySymbol: '$', debug: false });
+        })(window, document, 'script', '@ViewBag.UpstreamUrlRoot/v1/dist/upstream-messaging.js?v=' + (Math.ceil(new Date().getTime() / 100000)), 'splitit');
+        splitit('init', { merchantid: 'examples-site', lang: 'en', currency: 'USD', currencySymbol: '$', debug: false });
     </script>
 
     <script>

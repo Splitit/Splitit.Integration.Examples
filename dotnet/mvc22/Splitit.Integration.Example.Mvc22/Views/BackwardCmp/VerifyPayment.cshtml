@@ -1,0 +1,85 @@
+﻿@model CommonTestModel
+@{
+    ViewData["Title"] = "Flex Fields - Verify payment";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="splitit-default-ui grouped">
+    <div class="splitit-cc-group">
+        <div id="card-number"></div>
+        <div id="expiration-date"></div>
+        <div id="cvv"></div>
+        <div class="splitit-cc-group-separator"></div>
+    </div>
+
+    <div id="installment-picker"></div>
+    <div id="error-box"></div>
+    <div id="terms-conditions"></div>
+    <button id="btn-pay"></button>
+</div>
+
+@section Scripts {
+    <script>
+        var flexFieldsInstance = Splitit.FlexFields.setup({
+            fields: {
+                number: {
+                    selector: "#card-number"
+                },
+                cvv: {
+                    selector: "#cvv"
+                },
+                expirationDate: {
+                    selector: "#expiration-date"
+                }
+            },
+            installmentPicker: {
+                selector: "#installment-picker"
+            },
+            termsConditions: {
+                selector: "#terms-conditions"
+            },
+            errorBox: {
+                selector: "#error-box"
+            },
+            paymentButton: {
+                selector: "#btn-pay"
+            }
+        }).ready(function () {
+            var splititFlexFields = this;
+
+            $.ajax({
+                url: '@Url.Action("AjaxInitiate", "BackwardCmp")',
+                method: "post",
+                data: {
+                    __RequestVerificationToken: $('@Html.AntiForgeryToken()').val(),
+                    amount: 1880,
+                    numInstallments: null,
+                    numOptions: 5,
+                    billingAddress: {
+                        AddressLine: "260 Madison Avenue.",
+                        AddressLine2: "Appartment 1",
+                        City: "New York",
+                        State: "NY",
+                        Country: "USA",
+                        Zip: "10016"
+                    },
+                    consumerModel: {
+                        FullName: "John Smith",
+                        Email: "JohnS@splitit.com",
+                        PhoneNumber: "1-844-775-4848",
+                        CultureName: "en-us"
+                    }
+                },
+                success: function (data) {
+                    splititFlexFields.set(data);
+                }
+            });
+            
+        }).onSuccess(function (result) {
+            var ffParams = flexFieldsInstance.getSessionParams();
+            document.location = '/BackwardCmp/OrderComplete?planNumber=' + ffParams.planNumber;
+        });
+
+    </script>
+}

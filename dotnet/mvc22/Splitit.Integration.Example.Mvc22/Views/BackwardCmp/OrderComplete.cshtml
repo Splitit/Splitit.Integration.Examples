@@ -1,0 +1,12 @@
+﻿@model OrderCompleteModel
+@{
+    ViewData["Title"] = "Flex Fields - Order complete";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+@if( Model.Ok ){
+    <div style="color: green;">Order was processed successfully!</div>
+} else {
+    <div style="color: red;">ERROR ERROR ERROR!</div>
+}
