@@ -54,7 +54,7 @@
                 method: "post",
                 data: {
                     __RequestVerificationToken: $('@Html.AntiForgeryToken()').val(),
-                    amount: 1500,
+                    amount: 1000,
                     numInstallments: null,
                     numOptions: @(Model.InstallmentOptions.Count(p => p == ',') + 1),
                     billingAddress: {

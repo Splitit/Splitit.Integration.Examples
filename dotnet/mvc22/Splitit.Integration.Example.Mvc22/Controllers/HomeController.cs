@@ -28,6 +28,7 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
         {
             Configuration.Sandbox.AddApiKey(this._configuration["SplititApiKey"]);
 
+            ViewBag.Amount = amount;
             ViewBag.UpstreamMerchantId = this._configuration["SplititApiKey"];
             ViewBag.PublicToken = FlexFields
                 .Authenticate(Configuration.Sandbox, this._configuration["SplititApiUsername"], this._configuration["SplititApiPassword"])
