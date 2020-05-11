@@ -180,7 +180,7 @@
             }).ready(function () {
                 return;
 
-                var splititFlexFields = this;
+                /*var splititFlexFields = this;
 
                 $.ajax({
                     url: '/HostDebug?handler=Initiate',
@@ -190,7 +190,7 @@
                         amount: 380,
                         numInstallments: null,
                         numOptions: @(Model.InstallmentOptions.Count(p => p == ',') + 1),
-                        /*billingAddress: {
+                        billingAddress: {
                             AddressLine: "260 Madison Avenue.",
                             AddressLine2: "Appartment 1",
                             City: "New York",
@@ -203,7 +203,7 @@
                             Email: "JohnS@splitit.com",
                             PhoneNumber: "1-844-775-4848",
                             CultureName: "de-DE"
-                        }*/
+                        }
                     },
                     success: function (data) {
                         //alert('uspjeh');
@@ -217,7 +217,7 @@
                         //});
                         //splititFlexFields.checkout();
                     }
-                });
+                });*/
                 
             }).onRequire3ds1(function (result) {
                 // Here it is possible to announce to merchant that he will be redirected to 3D confirmation page.

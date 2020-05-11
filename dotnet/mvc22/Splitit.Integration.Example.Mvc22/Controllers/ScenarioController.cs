@@ -22,6 +22,8 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
         public ScenarioController(IConfiguration configuration)
         {
             this._configuration = configuration;
+
+            Configuration.Sandbox.AddApiKey(this._configuration["SplititApiKey"]);
         }
 
         public IActionResult Index()
@@ -29,29 +31,71 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
             return View();
         }
 
-        public IActionResult Basic(int options, decimal amount)
+        public IActionResult Basic(int options = 5, decimal amount = 500)
         {
-            var model = LoadCommonModel(options, amount);
-            return View(model);
+            return View(new CommonTestModel(){
+                PublicToken = FlexFields.Authenticate(Configuration.Sandbox, this._configuration["SplititApiUsername"], this._configuration["SplititApiPassword"])
+                    .AddInstallments(Enumerable.Range(1, options).ToList())
+                    .GetPublicToken(amount, "USD")
+            });
         }
 
-        private CommonTestModel LoadCommonModel(int options, decimal amount)
+        public IActionResult AutoCapture(int options = 5, decimal amount = 500)
         {
-            var model = new CommonTestModel();
+            return View(new CommonTestModel(){
+                PublicToken = FlexFields.Authenticate(Configuration.Sandbox, this._configuration["SplititApiUsername"], this._configuration["SplititApiPassword"])
+                    .AddInstallments(Enumerable.Range(1, options).ToList())
+                    .AddCaptureSettings(autoCapture: true)
+                    .GetPublicToken(amount, "USD")
+            });
+        }
 
-            model.InstallmentOptions = "[";
-            for(int i = 0; i < options; i++){
-                model.InstallmentOptions += (i+1) + ",";
-            }
+        public IActionResult DeferredCapture(int options = 5, decimal amount = 500, decimal firstInstallment = 100, int delayDays = 10)
+        {
+            return View(new CommonTestModel(){
+                PublicToken = FlexFields.Authenticate(Configuration.Sandbox, this._configuration["SplititApiUsername"], this._configuration["SplititApiPassword"])
+                    .AddInstallments(Enumerable.Range(1, options).ToList())
+                    .AddCaptureSettings(firstInstallmentAmount: firstInstallment, currencyCode: "USD", firstChargeDate: DateTime.Now.AddDays(delayDays))
+                    .GetPublicToken(amount, "USD")
+            });
+        }
 
-            model.InstallmentOptions = model.InstallmentOptions.TrimEnd(',') + "]";
+        public IActionResult Secure3D(int options = 5, decimal amount = 500)
+        {
+            return View(new CommonTestModel(){
+                PublicToken = FlexFields.Authenticate(Configuration.Sandbox, this._configuration["SplititApiUsername"], this._configuration["SplititApiPassword"])
+                    .AddInstallments(Enumerable.Range(1, options).ToList())
+                    .Add3DSecure(new RedirectUrls(){
+                        Canceled = $"https://{this.Request.Host.Host}" + Url.Action("Secure3DResponse", new { result = "canceled"}),
+                        Failed = $"https://{this.Request.Host.Host}" + Url.Action("Secure3DResponse", new { result = "failed"}),
+                        Succeeded = $"https://{this.Request.Host.Host}" + Url.Action("Secure3DResponse", new { result = "succeeded"}),
+                    })
+                    .GetPublicToken(amount, "USD")
+            });
+        }
 
-            Configuration.Sandbox.AddApiKey(this._configuration["SplititApiKey"]);
+        public IActionResult Secure3DResponse(string result)
+        {
+            return Content(result);
+        }
 
-            model.PublicToken = FlexFields.Authenticate(Configuration.Sandbox, this._configuration["SplititApiUsername"], this._configuration["SplititApiPassword"])
-                .GetPublicToken(amount, "USD");
+        [HttpGet]
+        public IActionResult AjaxPublicToken(int options = 5, decimal amount = 500)
+        {
+            ViewBag.Options = options;
+            ViewBag.Amount = amount;
+            return View(new CommonTestModel() {  });
+        }
 
-            return model;
+        [HttpPost]
+        [ActionName("AjaxPublicToken")]
+        public IActionResult AjaxPublicTokenPost(int options = 5, decimal amount = 500)
+        {
+            return Json(new CommonTestModel(){
+                PublicToken = FlexFields.Authenticate(Configuration.Sandbox, this._configuration["SplititApiUsername"], this._configuration["SplititApiPassword"])
+                    .AddInstallments(Enumerable.Range(1, options).ToList())
+                    .GetPublicToken(amount, "USD")
+            });
         }
     }
 }

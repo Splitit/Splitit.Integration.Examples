@@ -24,10 +24,16 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
             this._configuration = configuration;
         }
 
-        public IActionResult Index(decimal? amount = 500)
+        public IActionResult Index(decimal amount = 500, int options = 5)
         {
-            ViewBag.Amount = amount;
+            Configuration.Sandbox.AddApiKey(this._configuration["SplititApiKey"]);
+
             ViewBag.UpstreamMerchantId = this._configuration["SplititApiKey"];
+            ViewBag.PublicToken = FlexFields
+                .Authenticate(Configuration.Sandbox, this._configuration["SplititApiUsername"], this._configuration["SplititApiPassword"])
+                .AddInstallments(Enumerable.Range(1, options).ToList())
+                .GetPublicToken(amount, "USD");
+
             return View();
         }
 
@@ -36,73 +42,18 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-
-        [HttpPost]
-        public async Task<JsonResult> FlexFieldsExample(decimal amount, int? numInstallments = null)
-        {
-            try
-            {
-                var billingAddress = new AddressData();
-                var consumerModel = new ConsumerData(isLocked: false, isDataRestricted: false);
-
-                await this.TryUpdateModelAsync(billingAddress, "billingAddress");
-                await this.TryUpdateModelAsync(consumerModel, "consumerModel");
-
-                Configuration.Sandbox.AddApiKey(this._configuration["SplititApiKey"]);
-                // The next 2 lines are not needed unless deploying to Splitit environment
-                Configuration.Sandbox.BasePath = this._configuration["SplititApiUrl"];
-                Response.Headers.Add("splitit-api-url", Configuration.Sandbox.BasePath);
-
-                var loginApi = new LoginApi(Configuration.Sandbox);
-                var request = new LoginRequest(
-                    userName: this._configuration["SplititApiUsername"], 
-                    password: this._configuration["SplititApiPassword"]);
-
-                var loginResult = await loginApi.LoginPostAsync(request);
-
-                var installmentPlanApi = new InstallmentPlanApi(Configuration.Sandbox, sessionId: loginResult.SessionId);
-                var initResponse = installmentPlanApi.InstallmentPlanInitiate(new InitiateInstallmentPlanRequest()
-                {
-                    PlanData = new PlanData(
-                        amount: new MoneyWithCurrencyCode(amount, "USD"),
-                        numberOfInstallments: numInstallments,
-                        attempt3DSecure: false),
-                    BillingAddress = billingAddress,
-                    ConsumerData = consumerModel,
-                    PaymentWizardData = new PaymentWizardData(
-                        requestedNumberOfInstallments: "1,2,4,6,8",
-                        isOpenedInIframe: false),
-                    RedirectUrls = new RedirectUrls(
-                        succeeded: "https://www.success.com/",
-                        failed: "https://www.ynet.co.il/",
-                        canceled: "https://www.walla.com/")
-                });
-
-                return new JsonResult(initResponse);
-            }
-            catch(Exception ex)
-            {
-                var result = Json(ex);
-                result.StatusCode = StatusCodes.Status400BadRequest;
-                return result;
-            }
-            
-        }
     
-        public IActionResult Debug(int? options = null, int amount = 1000)
+        public IActionResult Debug(int options = 5, int amount = 1000)
         {
             var model = new DebugViewModel();
-            
-            options = options ?? 5;
-            model.InstallmentOptions = "[";
-            for(int i = 0; i < options.Value; i++){
-                model.InstallmentOptions += (i+1) + ",";
-            }
-            model.InstallmentOptions = model.InstallmentOptions.TrimEnd(',') + "]";
+
+            model.InstallmentOptions = $"[{string.Join(",", Enumerable.Range(1, options))}]";
 
             Configuration.Sandbox.AddApiKey(this._configuration["SplititApiKey"]);
 
-            model.PublicToken = FlexFields.Authenticate(Configuration.Sandbox, this._configuration["SplititApiUsername"], this._configuration["SplititApiPassword"])
+            model.PublicToken = FlexFields
+                .Authenticate(Configuration.Sandbox, this._configuration["SplititApiUsername"], this._configuration["SplititApiPassword"])
+                .AddInstallments(Enumerable.Range(1, options).ToList())
                 .GetPublicToken(amount, "USD");
 
             return View(model);

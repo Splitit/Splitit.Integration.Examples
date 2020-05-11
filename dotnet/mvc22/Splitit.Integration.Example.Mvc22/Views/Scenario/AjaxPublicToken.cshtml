@@ -1,18 +1,22 @@
 ﻿@model CommonTestModel
 @{
-    ViewData["Title"] = "Flex Fields - 3Ds1";
+    ViewData["Title"] = "Flex Fields - Public Token by AJAX";
 }
 
 <h1>@ViewData["Title"]</h1>
 
- <div class="splitit-default-ui grouped">
+<div>
+    <button type="button" style="padding: 10px; margin-bottom: 10px;" onclick="flexFieldsInstance.toggle()">Choose Splitit Payment Option</button>
+</div>
+
+<div class="splitit-default-ui grouped" id="splitit-card-data">
     <div class="splitit-cc-group">
         <div id="card-number"></div>
         <div id="expiration-date"></div>
         <div id="cvv"></div>
         <div class="splitit-cc-group-separator"></div>
     </div>
-    
+
     <div id="installment-picker"></div>
     <div id="error-box"></div>
     <div id="terms-conditions"></div>
@@ -21,7 +25,9 @@
 
 @section Scripts {
     <script>
-        var ff = Splitit.FlexFields.setup({
+        var flexFieldsInstance = Splitit.FlexFields.setup({
+            debug: true,
+            container: '#splitit-card-data',
             fields: {
                 number: {
                     selector: "#card-number"
@@ -49,46 +55,42 @@
             var splititFlexFields = this;
 
             $.ajax({
-                url: '@Url.Action("AjaxInitiate", "BackwardCmp")',
+                url: '@Url.Action("AjaxPublicToken", "Scenario")',
                 method: "post",
                 data: {
                     __RequestVerificationToken: $('@Html.AntiForgeryToken()').val(),
-                    amount: 9300.75,
-                    numOptions: 3,
-                    secure3d: true,
-                    numInstallments: null,
-                    billingAddress: {
-                        AddressLine: "260 Madison Avenue.",
-                        AddressLine2: "Appartment 1",
-                        City: "New York",
-                        State: "NY",
-                        Country: "USA",
-                        Zip: "10016"
-                    },
-                    consumerModel: {
-                        FullName: "John Smith",
-                        Email: "JohnS@splitit.com",
-                        PhoneNumber: "1-844-775-4848",
-                        CultureName: "en-us"
-                    }
+                    amount: @ViewBag.Amount,
+                    options: @ViewBag.Options
                 },
                 success: function (data) {
-                    splititFlexFields.set(data);
+                    splititFlexFields.setPublicToken(data.publicToken);
                 }
             });
-            
+
+            splititFlexFields.updateDetails({
+                billingAddress: {
+                    AddressLine: "260 Madison Avenue.",
+                    AddressLine2: "Appartment 1",
+                    City: "New York",
+                    State: "NY",
+                    Country: "USA",
+                    Zip: "10016"
+                },
+                consumerData: {
+                    FullName: "John Smith",
+                    Email: "JohnS@splitit.com",
+                    PhoneNumber: "1-844-775-4848",
+                    CultureName: "en-us"
+                }
+            });
         }).onSuccess(function (result) {
             // Respond here if everything goes well.
             alert('Payment was successful! Check console for result details.');
             console.log(result);
-        }).onRequire3ds1(function (result) {
-            this.redirect3ds1(result);/*, true, { 
-                title: "Would you like to be redirected to 3D provider?", 
-                cancelCallback: function(){ 
-                    alert('User cancelled 3D redirect.'); 
-                }    
-            });*/
         });
 
+        function showSplititForm(){
+            flexFieldsInstance.toggle();
+        }
     </script>
 }

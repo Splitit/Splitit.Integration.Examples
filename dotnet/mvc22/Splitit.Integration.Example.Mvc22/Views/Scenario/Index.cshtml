@@ -36,7 +36,75 @@
                     <label>Options</label>
                     <input type="text" class="form-control" placeholder="Num. options" value="5" name="options">
                     <label>Amount</label>
-                    <input type="text" class="form-control" placeholder="Num. options" value="400" name="amount">
+                    <input type="text" class="form-control" placeholder="Amount" value="400" name="amount">
+                </form>
+            </td>
+            <td>
+                <a class="btn btn-primary" onclick="$(this).closest('tr').find('form').submit();">Run</a>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                3D Secure
+            </td>
+            <td>
+                <form class="form-inline" asp-action="Secure3D" method="GET">
+                    <label>Options</label>
+                    <input type="text" class="form-control" placeholder="Num. options" value="5" name="options">
+                    <label>Amount</label>
+                    <input type="text" class="form-control" placeholder="Amount" value="400" name="amount">
+                </form>
+            </td>
+            <td>
+                <a class="btn btn-primary" onclick="$(this).closest('tr').find('form').submit();">Run</a>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                AutoCapture flag
+            </td>
+            <td>
+                <form class="form-inline" asp-action="AutoCapture" method="GET">
+                    <label>Options</label>
+                    <input type="text" class="form-control" placeholder="Num. options" value="5" name="options">
+                    <label>Amount</label>
+                    <input type="text" class="form-control" placeholder="Amount" value="400" name="amount">
+                </form>
+            </td>
+            <td>
+                <a class="btn btn-primary" onclick="$(this).closest('tr').find('form').submit();">Run</a>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                AJAX Public Token
+            </td>
+            <td>
+                <form class="form-inline" asp-action="AjaxPublicToken" method="GET">
+                    <label>Options</label>
+                    <input type="text" class="form-control" placeholder="Num. options" value="5" name="options">
+                    <label>Amount</label>
+                    <input type="text" class="form-control" placeholder="Amount" value="400" name="amount">
+                </form>
+            </td>
+            <td>
+                <a class="btn btn-primary" onclick="$(this).closest('tr').find('form').submit();">Run</a>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Deferred capture
+            </td>
+            <td>
+                <form class="form-inline" asp-action="DeferredCapture" method="GET">
+                    <label>Options</label>
+                    <input type="text" style="max-width: 80px;" class="form-control" placeholder="Num. options" value="5" name="options">
+                    <label>Amount</label>
+                    <input type="text" style="max-width: 80px;" class="form-control" placeholder="Amount" value="400" name="amount">
+                    <label>Delay (days)</label>
+                    <input type="text" style="max-width: 80px;" class="form-control" placeholder="Delay" value="10" name="delayDays">
+                    <label>Deposit</label>
+                    <input type="text" style="max-width: 80px;" class="form-control" placeholder="First installment" value="200" name="firstInstallment">
                 </form>
             </td>
             <td>

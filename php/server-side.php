@@ -5,16 +5,17 @@
 
     use SplititSdkClient\Configuration;
     use SplititSdkClient\ObjectSerializer;
-    use SplititSdkClient\Api\LoginApi;
+    use SplititSdkClient\FlexFields;
     use SplititSdkClient\Api\InstallmentPlanApi;
+    use SplititSdkClient\Api\LoginApi;
     use SplititSdkClient\Model\LoginRequest;
     use SplititSdkClient\Model\PlanData;
     use SplititSdkClient\Model\ConsumerData;
     use SplititSdkClient\Model\RequestHeader;
+    use SplititSdkClient\Model\RedirectUrls;
     use SplititSdkClient\Model\AddressData;
     use SplititSdkClient\Model\PlanApprovalEvidence;
     use SplititSdkClient\Model\CardData;
-    use SplititSdkClient\Model\PaymentWizardData;
     use SplititSdkClient\Model\MoneyWithCurrencyCode;
     use SplititSdkClient\Model\InitiateInstallmentPlanRequest;
     use SplititSdkClient\Model\CreateInstallmentPlanRequest;

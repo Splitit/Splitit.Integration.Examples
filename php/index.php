@@ -1,5 +1,30 @@
 <?php 
     $config = include 'config.php';
+
+    use SplititSdkClient\Configuration;
+    use SplititSdkClient\ObjectSerializer;
+    use SplititSdkClient\FlexFields;
+    use SplititSdkClient\Api\InstallmentPlanApi;
+    use SplititSdkClient\Api\LoginApi;
+    use SplititSdkClient\Model\LoginRequest;
+    use SplititSdkClient\Model\PlanData;
+    use SplititSdkClient\Model\ConsumerData;
+    use SplititSdkClient\Model\RequestHeader;
+    use SplititSdkClient\Model\RedirectUrls;
+    use SplititSdkClient\Model\AddressData;
+    use SplititSdkClient\Model\PlanApprovalEvidence;
+    use SplititSdkClient\Model\CardData;
+    use SplititSdkClient\Model\MoneyWithCurrencyCode;
+    use SplititSdkClient\Model\InitiateInstallmentPlanRequest;
+    use SplititSdkClient\Model\CreateInstallmentPlanRequest;
+
+    require_once(__DIR__ . '/vendor/autoload.php');
+
+    Configuration::sandbox()->setApiKey($config['apiKey']);
+
+    $ff = FlexFields::authenticate(Configuration::sandbox(), $config['username'], $config['password']);
+    $ff->addInstallments(array(1,2,3,4,5,6), 4);
+    $publicToken = $ff->getPublicToken(1000, "USD");
 ?>
 
 <!DOCTYPE html>
@@ -46,7 +71,10 @@
                     <img data-splitit-placeholder="banner" data-splitit-banner="color:shop-splitit-pay-your-terms" width="160" />
                 </div>
                 <div class="col-md-8" style="padding-left: 20px;">
-                    <div class="splitit-default-ui grouped">
+                    <div>
+                        <button type="button" onclick="payWithSplitit()">Pay with Splitit</button>
+                    </div>
+                    <div id="splitit-container" class="splitit-default-ui grouped">
                         <div class="splitit-cc-group">
                             <div id="card-number"></div>
                             <div id="expiration-date"></div>
@@ -77,8 +105,8 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
     <link rel="stylesheet" type="text/css"
-          href="https://hosted.sandbox.splitit.com/css/splitit.flex-fields.min.css?v=<?=round(microtime(true)/100)?>">
-    <script src="https://hosted.sandbox.splitit.com/js/dist/splitit.flex-fields.sdk.js?v=<?=round(microtime(true)/100)?>">
+          href="https://flex-fields.sandbox.splitit.com/css/splitit.flex-fields.min.css?v=<?=round(microtime(true)/100)?>">
+    <script src="https://flex-fields.sandbox.splitit.com/js/dist/splitit.flex-fields.sdk.js?v=<?=round(microtime(true)/100)?>">
     </script>
     
     <script>
@@ -93,6 +121,8 @@
 
     <script>
     var flexFieldsInstance = Splitit.FlexFields.setup({
+        container: "#splitit-container",
+        publicToken: "<?=$publicToken?>",
         fields: {
             number: {
                 selector: "#card-number"
@@ -115,42 +145,32 @@
         },
         paymentButton: {
             selector: "#btn-pay"
+        },
+        billingAddress: {
+            addressLine: "260 Madison Avenue.",
+            addressLine2: "Appartment 1",
+            city: "New York",
+            state: "NY",
+            country: "USA",
+            zip: "10016"
+        },
+        consumerData: {
+            fullName: "John Smith",
+            email: "JohnS@splitit.com",
+            phoneNumber: "1-844-775-4848",
+            cultureName: "en-us"
         }
     }).ready(function () {
-        var splititFlexFields = this;
-        $.ajax({
-            url: '/server-side.php',
-            method: "post",
-            contentType: "application/json",
-            dataType: "json",
-            data: JSON.stringify({
-                amount: 480,
-                numInstallments: null,
-                billingAddress: {
-                    addressLine: "260 Madison Avenue.",
-                    addressLine2: "Appartment 1",
-                    city: "New York",
-                    state: "NY",
-                    country: "USA",
-                    zip: "10016"
-                },
-                consumerModel: {
-                    fullName: "John Smith",
-                    email: "JohnS@splitit.com",
-                    phoneNumber: "1-844-775-4848",
-                    cultureName: "en-us"
-                }
-            }),
-            success: function (data) {
-                splititFlexFields.set(data);
-            }
-        });
-
+        // Splitit FlexFields loaded, optionally do something here.
     }).onSuccess(function (result) {
         // Respond here if everything goes well.
         alert('Payment was successful! Check console for result details.');
         console.log(result);
     });
+
+    function payWithSplitit(){
+        flexFieldsInstance.show();
+    }
 
     </script>
 </body>
