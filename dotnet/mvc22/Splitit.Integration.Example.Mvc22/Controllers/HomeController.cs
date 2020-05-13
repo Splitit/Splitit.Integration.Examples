@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json.Serialization;
 using Splitit.Integration.Example.Mvc21.Models;
+using Splitit.Integration.Example.Mvc22.Controllers;
 using Splitit.Integration.Example.Mvc22.Models;
 using Splitit.SDK.Client.Api;
 using Splitit.SDK.Client.Client;
@@ -15,23 +16,18 @@ using Splitit.SDK.Client.Model;
 
 namespace Splitit.Integration.Example.Mvc21.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : ExampleControllerBase
     {
-        private IConfiguration _configuration;
-
-        public HomeController(IConfiguration configuration)
+        public HomeController(IConfiguration configuration) : base(configuration)
         {
-            this._configuration = configuration;
         }
 
         public IActionResult Index(decimal amount = 500, int options = 5)
         {
-            Configuration.Sandbox.AddApiKey(this._configuration["SplititApiKey"]);
-
             ViewBag.Amount = amount;
             ViewBag.UpstreamMerchantId = this._configuration["SplititApiKey"];
             ViewBag.PublicToken = FlexFields
-                .Authenticate(Configuration.Sandbox, this._configuration["SplititApiUsername"], this._configuration["SplititApiPassword"])
+                .Authenticate(this.FlexFieldsEnv, this._configuration["SplititApiUsername"], this._configuration["SplititApiPassword"])
                 .AddInstallments(Enumerable.Range(1, options).ToList())
                 .GetPublicToken(amount, "USD");
 
@@ -50,10 +46,8 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
 
             model.InstallmentOptions = $"[{string.Join(",", Enumerable.Range(1, options))}]";
 
-            Configuration.Sandbox.AddApiKey(this._configuration["SplititApiKey"]);
-
             model.PublicToken = FlexFields
-                .Authenticate(Configuration.Sandbox, this._configuration["SplititApiUsername"], this._configuration["SplititApiPassword"])
+                .Authenticate(this.FlexFieldsEnv, this._configuration["SplititApiUsername"], this._configuration["SplititApiPassword"])
                 .AddInstallments(Enumerable.Range(1, options).ToList())
                 .GetPublicToken(amount, "USD");
 
@@ -65,19 +59,17 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
             //await this.TryUpdateModelAsync(billingAddress, "billingAddress");
             //await this.TryUpdateModelAsync(consumerModel, "consumerModel");
 
-            // Configuration.Sandbox.AddApiKey(this._configuration["SplititApiKey"]);
-
-            // var publicToken = FlexFields.Authenticate(Configuration.Sandbox, this._configuration["SplititApiUsername"], this._configuration["SplititApiPassword"])
+            // var publicToken = FlexFields.Authenticate(this.FlexFieldsEnv, this._configuration["SplititApiUsername"], this._configuration["SplititApiPassword"])
             //     .GetPublicToken(amount, "USD");
 
             // return new JsonResult(new { publicToken });
 
-            // var loginApi = new LoginApi(Configuration.Sandbox);
+            // var loginApi = new LoginApi(this.FlexFieldsEnv);
             // var request = new LoginRequest(userName: this._configuration["SplititApiUsername"], password: this._configuration["SplititApiPassword"]);
 
             // var loginResult = await loginApi.LoginPostAsync(request);
 
-            // var installmentPlanApi = new InstallmentPlanApi(Configuration.Sandbox, sessionId: loginResult.SessionId);
+            // var installmentPlanApi = new InstallmentPlanApi(this.FlexFieldsEnv, sessionId: loginResult.SessionId);
             // var initResponse = installmentPlanApi.InstallmentPlanInitiate(new InitiateInstallmentPlanRequest()
             // {
             //     PlanData = new PlanData(
