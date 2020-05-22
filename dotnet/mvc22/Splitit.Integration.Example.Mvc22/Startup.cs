@@ -31,8 +31,9 @@ namespace Splitit.Integration.Example.Mvc21
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            services.AddHealthChecks();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -47,6 +48,8 @@ namespace Splitit.Integration.Example.Mvc21
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
+
+            app.UseHealthChecks("/health-check");
 
             app.UseStaticFiles();
             app.UseCookiePolicy();

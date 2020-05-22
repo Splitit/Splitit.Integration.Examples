@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json.Serialization;
 using Splitit.Integration.Example.Mvc21.Models;
+using Splitit.Integration.Example.Mvc22.Controllers;
 using Splitit.Integration.Example.Mvc22.Models;
 using Splitit.SDK.Client.Api;
 using Splitit.SDK.Client.Client;
@@ -15,13 +16,11 @@ using Splitit.SDK.Client.Model;
 
 namespace Splitit.Integration.Example.Mvc21.Controllers
 {
-    public class BackwardCmpController : Controller
+    public class BackwardCmpController : ExampleControllerBase
     {
-        private IConfiguration _configuration;
-
-        public BackwardCmpController(IConfiguration configuration)
+        public BackwardCmpController(IConfiguration configuration) 
+            : base(configuration)
         {
-            this._configuration = configuration;
         }
 
         public IActionResult Index()
@@ -40,16 +39,12 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
             await this.TryUpdateModelAsync(billingAddress, "billingAddress");
             await this.TryUpdateModelAsync(consumerModel, "consumerModel");
 
-            Configuration.Sandbox.AddApiKey(this._configuration["SplititApiKey"]);
-
-            var env = Configuration.Sandbox;
-
-            var loginApi = new LoginApi(env);
+            var loginApi = new LoginApi(this.FlexFieldsEnv);
             var request = new LoginRequest(userName: this._configuration["SplititApiUsername"], password: this._configuration["SplititApiPassword"]);
 
             var loginResult = await loginApi.LoginPostAsync(request);
 
-            var installmentPlanApi = new InstallmentPlanApi(env, sessionId: loginResult.SessionId);
+            var installmentPlanApi = new InstallmentPlanApi(this.FlexFieldsEnv, sessionId: loginResult.SessionId);
             var initResponse = installmentPlanApi.InstallmentPlanInitiate(new InitiateInstallmentPlanRequest()
             {
                 PlanData = new PlanData(
@@ -104,14 +99,12 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
         public async Task<IActionResult> OrderComplete(string planNumber){
             var amount = 1880; // Usually this comes from DB.
 
-            Configuration.Sandbox.AddApiKey(this._configuration["SplititApiKey"]);
-
-            var loginApi = new LoginApi(Configuration.Sandbox);
+            var loginApi = new LoginApi(this.FlexFieldsEnv);
             var request = new LoginRequest(userName: this._configuration["SplititApiUsername"], password: this._configuration["SplititApiPassword"]);
 
             var loginResult = await loginApi.LoginPostAsync(request);
 
-            var installmentPlanApi = new InstallmentPlanApi(Configuration.Sandbox, sessionId: loginResult.SessionId);
+            var installmentPlanApi = new InstallmentPlanApi(this.FlexFieldsEnv, sessionId: loginResult.SessionId);
             var verifyPaymentResponse = installmentPlanApi.InstallmentPlanVerifyPayment(new VerifyPaymentRequest(){
                 InstallmentPlanNumber = planNumber
             });
@@ -122,7 +115,5 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
                 return View(new OrderCompleteModel(){ Ok = false });
             }
         }
-
-
     }
 }

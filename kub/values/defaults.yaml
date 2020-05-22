@@ -4,3 +4,19 @@ env:
   UseSSM:
     value: 'false'
 
+readinessProbe:
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  successThreshold: 2
+  httpGet:
+    path: /health-check
+    port: https
+    scheme: HTTPS
+
+livenessProbe:
+  periodSeconds: 20
+  timeoutSeconds: 10
+  httpGet:
+    path: /health-check
+    port: https
+    scheme: HTTPS
