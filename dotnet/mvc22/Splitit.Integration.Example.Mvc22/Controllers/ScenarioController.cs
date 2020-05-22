@@ -40,6 +40,15 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
             });
         }
 
+        public IActionResult CardholderName(int options = 5, decimal amount = 500)
+        {
+            return View(new CommonTestModel(){
+                PublicToken = FlexFields.Authenticate(Configuration.Sandbox, this._configuration["SplititApiUsername"], this._configuration["SplititApiPassword"])
+                    .AddInstallments(Enumerable.Range(1, options).ToList())
+                    .GetPublicToken(amount, "USD")
+            });
+        }
+
         public IActionResult AutoCapture(int options = 5, decimal amount = 500)
         {
             return View(new CommonTestModel(){
