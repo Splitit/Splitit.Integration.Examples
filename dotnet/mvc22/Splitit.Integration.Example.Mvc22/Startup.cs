@@ -41,11 +41,12 @@ namespace Splitit.Integration.Example.Mvc21
         {
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+                app.UseDeveloperExceptionPage();    
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseDeveloperExceptionPage();    
+                //app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
 
