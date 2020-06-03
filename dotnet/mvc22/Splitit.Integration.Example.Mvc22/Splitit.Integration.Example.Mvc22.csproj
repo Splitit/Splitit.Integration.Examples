@@ -22,7 +22,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.HealthChecks" Version="2.2.0" />
-    <PackageReference Include="splitit.sdk.client" Version="1.4.6" />
+    <PackageReference Include="splitit.sdk.client" Version="1.4.7-*" />
   </ItemGroup>
 
 </Project>
