@@ -24,14 +24,15 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
 
         public IActionResult Index(decimal amount = 500, int options = 5)
         {
-            ViewBag.Amount = amount;
-            ViewBag.UpstreamMerchantId = this._configuration["SplititApiKey"];
-            ViewBag.PublicToken = FlexFields
-                .Authenticate(this.FlexFieldsEnv, this._configuration["SplititApiUsername"], this._configuration["SplititApiPassword"])
-                .AddInstallments(Enumerable.Range(1, options).ToList())
-                .GetPublicToken(amount, "USD");
+            return RedirectToAction("Index", "Scenario");
+            // ViewBag.Amount = amount;
+            // ViewBag.UpstreamMerchantId = this._configuration["SplititApiKey"];
+            // ViewBag.PublicToken = FlexFields
+            //     .Authenticate(this.FlexFieldsEnv, this._configuration["SplititApiUsername"], this._configuration["SplititApiPassword"])
+            //     .AddInstallments(Enumerable.Range(1, options).ToList())
+            //     .GetPublicToken(amount, "USD");
 
-            return View();
+            //return View();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
