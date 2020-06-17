@@ -1,8 +1,8 @@
 ﻿@using Microsoft.Extensions.Configuration
-@inject IConfiguration Configuration
+@inject CredentialSource CredentialSource
 
 @{
-    ViewBag.FlexFieldsUrlRoot = Configuration["FlexFieldsUrlRoot"];
-    ViewBag.UpstreamUrlRoot = Configuration["UpstreamUrlRoot"];
+    ViewBag.FlexFieldsUrlRoot = CredentialSource.FlexFieldsUrlRoot;
+    ViewBag.UpstreamUrlRoot = CredentialSource.UpstreamUrlRoot;
     Layout = "_LayoutTest";
 }

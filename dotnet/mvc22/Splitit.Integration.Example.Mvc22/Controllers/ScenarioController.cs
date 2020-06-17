@@ -18,7 +18,7 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
 {
     public class ScenarioController : ExampleControllerBase
     {
-        public ScenarioController(IConfiguration configuration) : base (configuration)
+        public ScenarioController(CredentialSource configuration) : base (configuration)
         {
         }
 
@@ -30,7 +30,7 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
         public IActionResult Basic(int options = 5, decimal amount = 500)
         {
             return View(new CommonTestModel(){
-                PublicToken = FlexFields.Authenticate(this.FlexFieldsEnv, this._configuration["SplititApiUsername"], this._configuration["SplititApiPassword"])
+                PublicToken = FlexFields.Authenticate(this.FlexFieldsEnv, SplititApiUsername, SplititApiPassword)
                     .AddInstallments(Enumerable.Range(1, options).ToList())
                     .GetPublicToken(amount, "USD")
             });
@@ -39,7 +39,7 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
         public IActionResult CardholderName(int options = 5, decimal amount = 500)
         {
             return View(new CommonTestModel(){
-                PublicToken = FlexFields.Authenticate(Configuration.Sandbox, this._configuration["SplititApiUsername"], this._configuration["SplititApiPassword"])
+                PublicToken = FlexFields.Authenticate(Configuration.Sandbox, SplititApiUsername, SplititApiPassword)
                     .AddInstallments(Enumerable.Range(1, options).ToList())
                     .GetPublicToken(amount, "USD")
             });
@@ -48,7 +48,7 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
         public IActionResult AutoCapture(int options = 5, decimal amount = 500)
         {
             return View(new CommonTestModel(){
-                PublicToken = FlexFields.Authenticate(this.FlexFieldsEnv, this._configuration["SplititApiUsername"], this._configuration["SplititApiPassword"])
+                PublicToken = FlexFields.Authenticate(this.FlexFieldsEnv, SplititApiUsername, SplititApiPassword)
                     .AddInstallments(Enumerable.Range(1, options).ToList())
                     .AddCaptureSettings(autoCapture: true)
                     .GetPublicToken(amount, "USD")
@@ -58,7 +58,7 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
         public IActionResult DeferredCapture(int options = 5, decimal amount = 500, decimal firstInstallment = 100, int delayDays = 10)
         {
             return View(new CommonTestModel(){
-                PublicToken = FlexFields.Authenticate(this.FlexFieldsEnv, this._configuration["SplititApiUsername"], this._configuration["SplititApiPassword"])
+                PublicToken = FlexFields.Authenticate(this.FlexFieldsEnv, SplititApiUsername, SplititApiPassword)
                     .AddInstallments(Enumerable.Range(1, options).ToList())
                     .AddCaptureSettings(firstInstallmentAmount: firstInstallment, currencyCode: "USD", firstChargeDate: DateTime.Now.AddDays(delayDays))
                     .GetPublicToken(amount, "USD")
@@ -68,7 +68,7 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
         public IActionResult Secure3D(int options = 5, decimal amount = 500)
         {
             return View(new CommonTestModel(){
-                PublicToken = FlexFields.Authenticate(this.FlexFieldsEnv, this._configuration["SplititApiUsername"], this._configuration["SplititApiPassword"])
+                PublicToken = FlexFields.Authenticate(this.FlexFieldsEnv, SplititApiUsername, SplititApiPassword)
                     .AddInstallments(Enumerable.Range(1, options).ToList())
                     .Add3DSecure(new RedirectUrls(){
                         Canceled = $"https://{this.Request.Host.Host}" + Url.Action("Secure3DResponse", new { result = "canceled"}),
@@ -97,7 +97,7 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
         public IActionResult AjaxPublicTokenPost(int options = 5, decimal amount = 500)
         {
             return Json(new CommonTestModel(){
-                PublicToken = FlexFields.Authenticate(this.FlexFieldsEnv, this._configuration["SplititApiUsername"], this._configuration["SplititApiPassword"])
+                PublicToken = FlexFields.Authenticate(this.FlexFieldsEnv, SplititApiUsername, SplititApiPassword)
                     .AddInstallments(Enumerable.Range(1, options).ToList())
                     .GetPublicToken(amount, "USD")
             });

@@ -18,7 +18,7 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
 {
     public class HomeController : ExampleControllerBase
     {
-        public HomeController(IConfiguration configuration) : base(configuration)
+        public HomeController(CredentialSource configuration) : base(configuration)
         {
         }
 
@@ -26,13 +26,44 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
         {
             return RedirectToAction("Index", "Scenario");
             // ViewBag.Amount = amount;
-            // ViewBag.UpstreamMerchantId = this._configuration["SplititApiKey"];
+            // ViewBag.UpstreamMerchantId = SplititApiKey;
             // ViewBag.PublicToken = FlexFields
-            //     .Authenticate(this.FlexFieldsEnv, this._configuration["SplititApiUsername"], this._configuration["SplititApiPassword"])
+            //     .Authenticate(this.FlexFieldsEnv, SplititApiUsername, SplititApiPassword)
             //     .AddInstallments(Enumerable.Range(1, options).ToList())
             //     .GetPublicToken(amount, "USD");
 
             //return View();
+        }
+
+        public IActionResult SetCredentials()
+        {
+            return View(SetCredentialsModel.FromCurrent(this.CredentialSource));
+        }
+
+        [HttpPost]
+        public IActionResult SetCredentials(SetCredentialsModel model)
+        {
+            this.Response.Cookies.Append(nameof(model.Environment), model.Environment);
+            this.Response.Cookies.Append(nameof(model.SplititApiKey), model.SplititApiKey);
+            this.Response.Cookies.Append(nameof(model.SplititApiPassword), model.SplititApiPassword);
+            this.Response.Cookies.Append(nameof(model.SplititApiUsername), model.SplititApiUsername);
+
+            this.TempData["show-success"] = true;
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult ResetCredentials()
+        {
+            this.Response.Cookies.Delete(nameof(SetCredentialsModel.Environment));
+            this.Response.Cookies.Delete(nameof(SetCredentialsModel.SplititApiKey));
+            this.Response.Cookies.Delete(nameof(SetCredentialsModel.SplititApiPassword));
+            this.Response.Cookies.Delete(nameof(SetCredentialsModel.SplititApiUsername));
+
+            this.TempData["show-success"] = true;
+
+            return RedirectToAction("SetCredentials");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
@@ -48,7 +79,7 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
             model.InstallmentOptions = $"[{string.Join(",", Enumerable.Range(1, options))}]";
 
             model.PublicToken = FlexFields
-                .Authenticate(this.FlexFieldsEnv, this._configuration["SplititApiUsername"], this._configuration["SplititApiPassword"])
+                .Authenticate(this.FlexFieldsEnv, SplititApiUsername, SplititApiPassword)
                 .AddInstallments(Enumerable.Range(1, options).ToList())
                 .GetPublicToken(amount, "USD");
 
@@ -60,13 +91,13 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
             //await this.TryUpdateModelAsync(billingAddress, "billingAddress");
             //await this.TryUpdateModelAsync(consumerModel, "consumerModel");
 
-            // var publicToken = FlexFields.Authenticate(this.FlexFieldsEnv, this._configuration["SplititApiUsername"], this._configuration["SplititApiPassword"])
+            // var publicToken = FlexFields.Authenticate(this.FlexFieldsEnv, SplititApiUsername, SplititApiPassword)
             //     .GetPublicToken(amount, "USD");
 
             // return new JsonResult(new { publicToken });
 
             // var loginApi = new LoginApi(this.FlexFieldsEnv);
-            // var request = new LoginRequest(userName: this._configuration["SplititApiUsername"], password: this._configuration["SplititApiPassword"]);
+            // var request = new LoginRequest(userName: SplititApiUsername, password: SplititApiPassword);
 
             // var loginResult = await loginApi.LoginPostAsync(request);
 

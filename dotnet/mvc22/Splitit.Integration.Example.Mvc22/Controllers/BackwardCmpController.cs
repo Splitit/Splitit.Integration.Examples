@@ -18,7 +18,7 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
 {
     public class BackwardCmpController : ExampleControllerBase
     {
-        public BackwardCmpController(IConfiguration configuration) 
+        public BackwardCmpController(CredentialSource configuration) 
             : base(configuration)
         {
         }
@@ -40,7 +40,7 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
             await this.TryUpdateModelAsync(consumerModel, "consumerModel");
 
             var loginApi = new LoginApi(this.FlexFieldsEnv);
-            var request = new LoginRequest(userName: this._configuration["SplititApiUsername"], password: this._configuration["SplititApiPassword"]);
+            var request = new LoginRequest(userName: SplititApiUsername, password: SplititApiPassword);
 
             var loginResult = await loginApi.LoginPostAsync(request);
 
@@ -100,7 +100,7 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
             var amount = 1880; // Usually this comes from DB.
 
             var loginApi = new LoginApi(this.FlexFieldsEnv);
-            var request = new LoginRequest(userName: this._configuration["SplititApiUsername"], password: this._configuration["SplititApiPassword"]);
+            var request = new LoginRequest(userName: SplititApiUsername, password: SplititApiPassword);
 
             var loginResult = await loginApi.LoginPostAsync(request);
 

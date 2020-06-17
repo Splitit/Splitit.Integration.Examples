@@ -8,8 +8,8 @@
     <a asp-action="Index" asp-controller="Home">Back to Home</a>
 </div>
 <div style="margin-bottom: 20px;">
-    Upstream loads from: @ViewBag.UpstreamUrlRoot <br />
-    Flex Fields loads from: @ViewBag.FlexFieldsUrlRoot <br />
+    Upstream loads from: <a href="@(ViewBag.UpstreamUrlRoot)/v1/integration-wiki.html" target="_blank">@(ViewBag.UpstreamUrlRoot)/v1/integration-wiki.html</a> <br />
+    Flex Fields loads from: <a href="@ViewBag.FlexFieldsUrlRoot" target="_blank">@ViewBag.FlexFieldsUrlRoot</a> <br />
 </div>
 
 <table class="table">
