@@ -5,8 +5,8 @@ env:
     value: 'false'
 
 readinessProbe:
-  initialDelaySeconds: 30
-  periodSeconds: 100
+  initialDelaySeconds: 20
+  periodSeconds: 10
   successThreshold: 2
   httpGet:
     path: /health-check
@@ -14,8 +14,8 @@ readinessProbe:
     scheme: HTTPS
 
 livenessProbe:
-  periodSeconds: 200
-  timeoutSeconds: 100
+  periodSeconds: 20
+  timeoutSeconds: 10
   httpGet:
     path: /health-check
     port: https
