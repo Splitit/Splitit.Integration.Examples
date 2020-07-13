@@ -58,10 +58,8 @@ pipeline {
       when { expression { params.REQUESTED_ACTION == 'ToDev' } }
       steps {
         script {
-          ingress_hostname ="examples.dev.splitit.com"
           libs.deployHelm(props)
         }
-        build job: 'kubectl_ingress_update', parameters: [string(name: 'ACTION', value:"ADD"),string(name: 'ENV', value:"${props.environment}"),string(name: 'CLUSTER_NAME', value:"${props.cluster}"),string(name: 'HOST', value:"${ingress_hostname}"),string(name: 'SERVICE', value:"${props.helm_release}"),string(name: 'HTTP_PATH', value:"${props.ingress_path}")]
       }
     }
 
@@ -69,10 +67,8 @@ pipeline {
       when { expression { params.REQUESTED_ACTION == 'ToStg' } }
       steps {
         script {
-          ingress_hostname ="examples.stg.splitit.com"
           libs.deployHelm(props)
         }
-        build job: 'kubectl_ingress_update', parameters: [string(name: 'ACTION', value:"ADD"),string(name: 'ENV', value:"${props.environment}"),string(name: 'CLUSTER_NAME', value:"${props.cluster}"),string(name: 'HOST', value:"${ingress_hostname}"),string(name: 'SERVICE', value:"${props.helm_release}"),string(name: 'HTTP_PATH', value:"${props.ingress_path}")]
       }
     }
 
@@ -80,10 +76,8 @@ pipeline {
       when { expression { params.REQUESTED_ACTION == 'ToSandbox' } }            
       steps {
         script {
-          ingress_hostname ="examples.sandbox.splitit.com"
           libs.deployHelm(props)
         }
-        build job: 'kubectl_ingress_update', parameters: [string(name: 'ACTION', value:"ADD"),string(name: 'ENV', value:"${props.environment}"),string(name: 'CLUSTER_NAME', value:"${props.cluster}"),string(name: 'HOST', value:"${ingress_hostname}"),string(name: 'SERVICE', value:"${props.helm_release}"),string(name: 'HTTP_PATH', value:"${props.ingress_path}")]
       }
     }
 
@@ -91,10 +85,8 @@ pipeline {
       when { expression { params.REQUESTED_ACTION == 'ToProd' } }            
       steps {
         script {
-          ingress_hostname ="examples.production.splitit.com"
           libs.deployHelm(props)
         }
-        build job: 'kubectl_ingress_update', parameters: [string(name: 'ACTION', value:"ADD"),string(name: 'ENV', value:"${props.environment}"),string(name: 'CLUSTER_NAME', value:"${props.cluster}"),string(name: 'HOST', value:"${ingress_hostname}"),string(name: 'SERVICE', value:"${props.helm_release}"),string(name: 'HTTP_PATH', value:"${props.ingress_path}")]
       }
     }
   }

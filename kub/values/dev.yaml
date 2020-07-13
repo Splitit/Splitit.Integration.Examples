@@ -14,3 +14,7 @@ ingress:
     paths:
     - /*
     port: https
+
+istio:
+  hosts:
+  - examples.dev.splitit.com
