@@ -112,5 +112,22 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
                     .GetPublicToken(amount, "USD")
             });
         }
+
+        [HttpGet]
+        public IActionResult EmbeddedPaymentForm(int options = 5, decimal amount = 500)
+        {
+            return View(new CommonTestModel(){
+                PublicToken = FlexFields.Authenticate(this.FlexFieldsEnv, this._configuration["SplititApiUsername"], this._configuration["SplititApiPassword"])
+                    .AddInstallments(Enumerable.Range(1, options).ToList())
+                    .AddBillingInformation(addressData: new AddressData()
+					{
+                        AddressLine = "V. Frane Gotovca",
+                        City = "Zagreb",
+                        Country = "Croatia",
+                        Zip = "10000"
+					})
+                    .GetPublicToken(amount, "USD")
+            });
+        }
     }
 }

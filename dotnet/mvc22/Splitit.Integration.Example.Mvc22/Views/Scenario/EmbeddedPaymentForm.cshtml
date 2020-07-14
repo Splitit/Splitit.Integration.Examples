@@ -1,0 +1,45 @@
+﻿@model CommonTestModel
+
+@using Microsoft.Extensions.Configuration
+
+@inject IConfiguration Configuration
+
+@{
+    ViewData["Title"] = "Embedded PFv3 - PoC";
+    Layout = "_Layout";
+    ViewBag.PaymentFormEmbedderUrlRoot = Configuration["PaymentFormEmbedderUrlRoot"];
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div id="splitit-payment-container">
+
+</div>
+
+<div id="success-alert" class="alert alert-success" style="display: none;">
+    Your payment was successful!
+</div>
+
+<div id="error-alert" class="alert alert-danger" style="display: none;">
+    Your payment failed.
+</div>
+
+@section Scripts {
+    <script src="@ViewBag.PaymentFormEmbedderUrlRoot/e/pf-embedded.js?v=@(System.DateTime.Now.Ticks)"></script>
+
+    <script>
+        Splitit.PaymentFormEmbedded.host.setup({
+            token: '@Model.PublicToken',
+            url: '@ViewBag.PaymentFormEmbedderUrlRoot',
+            container: '#splitit-payment-container',
+            onError: function(){
+                $("#error-alert").show();
+                $("#splitit-payment-container").hide();
+            },
+            onSuccess: function(){
+                $("#success-alert").show();
+                $("#splitit-payment-container").hide();
+            }
+        });
+    </script>
+}
