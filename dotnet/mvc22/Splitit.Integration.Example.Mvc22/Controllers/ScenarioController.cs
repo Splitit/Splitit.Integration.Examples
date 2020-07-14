@@ -117,7 +117,7 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
         public IActionResult EmbeddedPaymentForm(int options = 5, decimal amount = 500)
         {
             return View(new CommonTestModel(){
-                PublicToken = FlexFields.Authenticate(this.FlexFieldsEnv, this._configuration["SplititApiUsername"], this._configuration["SplititApiPassword"])
+                PublicToken = FlexFields.Authenticate(this.FlexFieldsEnv, SplititApiUsername, SplititApiPassword)
                     .AddInstallments(Enumerable.Range(1, options).ToList())
                     .AddBillingInformation(addressData: new AddressData()
 					{

@@ -44,9 +44,13 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
         public IActionResult SetCredentials(SetCredentialsModel model)
         {
             this.Response.Cookies.Append(nameof(model.Environment), model.Environment);
+            this.Response.Cookies.Append(nameof(model.SplititApiUrl), model.SplititApiUrl);
             this.Response.Cookies.Append(nameof(model.SplititApiKey), model.SplititApiKey);
             this.Response.Cookies.Append(nameof(model.SplititApiPassword), model.SplititApiPassword);
             this.Response.Cookies.Append(nameof(model.SplititApiUsername), model.SplititApiUsername);
+            this.Response.Cookies.Append(nameof(model.FlexFieldsUrlRoot), model.FlexFieldsUrlRoot);
+            this.Response.Cookies.Append(nameof(model.PaymentFormEmbedderUrlRoot), model.PaymentFormEmbedderUrlRoot);
+            this.Response.Cookies.Append(nameof(model.UpstreamUrlRoot), model.UpstreamUrlRoot);
 
             this.TempData["show-success"] = true;
 
@@ -58,8 +62,12 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
         {
             this.Response.Cookies.Delete(nameof(SetCredentialsModel.Environment));
             this.Response.Cookies.Delete(nameof(SetCredentialsModel.SplititApiKey));
+            this.Response.Cookies.Delete(nameof(SetCredentialsModel.SplititApiUrl));
             this.Response.Cookies.Delete(nameof(SetCredentialsModel.SplititApiPassword));
             this.Response.Cookies.Delete(nameof(SetCredentialsModel.SplititApiUsername));
+            this.Response.Cookies.Delete(nameof(SetCredentialsModel.PaymentFormEmbedderUrlRoot));
+            this.Response.Cookies.Delete(nameof(SetCredentialsModel.FlexFieldsUrlRoot));
+            this.Response.Cookies.Delete(nameof(SetCredentialsModel.UpstreamUrlRoot));
 
             this.TempData["show-success"] = true;
 

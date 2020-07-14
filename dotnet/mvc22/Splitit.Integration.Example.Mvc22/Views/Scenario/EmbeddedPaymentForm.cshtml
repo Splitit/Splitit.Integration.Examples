@@ -1,13 +1,10 @@
 ﻿@model CommonTestModel
 
-@using Microsoft.Extensions.Configuration
-
-@inject IConfiguration Configuration
+@inject CredentialSource Credentials
 
 @{
     ViewData["Title"] = "Embedded PFv3 - PoC";
     Layout = "_Layout";
-    ViewBag.PaymentFormEmbedderUrlRoot = Configuration["PaymentFormEmbedderUrlRoot"];
 }
 
 <h1>@ViewData["Title"]</h1>
@@ -25,12 +22,12 @@
 </div>
 
 @section Scripts {
-    <script src="@ViewBag.PaymentFormEmbedderUrlRoot/e/pf-embedded.js?v=@(System.DateTime.Now.Ticks)"></script>
+    <script src="@Credentials.PaymentFormEmbedderUrlRoot/e/pf-embedded.js?v=@(System.DateTime.Now.Ticks)"></script>
 
     <script>
         Splitit.PaymentFormEmbedded.host.setup({
             token: '@Model.PublicToken',
-            url: '@ViewBag.PaymentFormEmbedderUrlRoot',
+            url: '@Credentials.PaymentFormEmbedderUrlRoot',
             container: '#splitit-payment-container',
             onError: function(){
                 $("#error-alert").show();

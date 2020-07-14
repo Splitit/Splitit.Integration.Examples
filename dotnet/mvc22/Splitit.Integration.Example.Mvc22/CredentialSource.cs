@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -18,18 +19,18 @@ namespace Splitit.Integration.Example.Mvc21
         private IConfiguration _configuration;
         private HttpContext _httpContext;
 
+        private IConfigurationSection CurrentEnvConfig
+		{
+            get
+			{
+                return this._configuration.GetSection(this.Environment);
+			}
+		}
+
         public CredentialSource(IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
         {
             this._configuration = configuration;
             this._httpContext = httpContextAccessor.HttpContext;
-        }
-
-        private bool UseProductionUrl
-        {
-            get
-            {
-                return GetCookieValue(nameof(SetCredentialsModel.Environment)) == "Production";
-            }
         }
 
         private string GetCookieValue(string key)
@@ -42,52 +43,57 @@ namespace Splitit.Integration.Example.Mvc21
             return null;
         }
 
-        public string SplititApiUrl
+        public string Environment
         {
             get
             {
-                return UseProductionUrl ? this._configuration["SplititApiUrlProduction"] : this._configuration["SplititApiUrl"];
+                return GetCookieValue(nameof(SetCredentialsModel.Environment)) ?? ParseEnvironment(this._httpContext);
             }
         }
+
+        public static string ParseEnvironment(HttpContext context)
+		{
+            if (context.Request.Host.Host.Contains(".dev."))
+            {
+                return "dev";
+            }
+
+            if (context.Request.Host.Host.Contains(".stg."))
+            {
+                return "Staging";
+            }
+
+            if (context.Request.Host.Host.Contains(".sandbox."))
+            {
+                return "Sandbox";
+            }
+
+            if (context.Request.Host.Host.Contains(".production."))
+            {
+                return "Production";
+            }
+
+            return "local";
+        }
+
+        public string SplititApiUrl
+            => GetCookieValue(nameof(SetCredentialsModel.SplititApiUrl)) ?? CurrentEnvConfig["SplititApiUrl"];
+
+        public string PaymentFormEmbedderUrlRoot
+            => GetCookieValue(nameof(SetCredentialsModel.PaymentFormEmbedderUrlRoot)) ?? CurrentEnvConfig["PaymentFormEmbedderUrlRoot"];
 
         public string SplititApiKey
-        {
-            get
-            {
-                return GetCookieValue(nameof(SetCredentialsModel.SplititApiKey)) ?? this._configuration["SplititApiKey"];
-            }
-        }
+            => GetCookieValue(nameof(SetCredentialsModel.SplititApiKey)) ?? this.CurrentEnvConfig["SplititApiKey"];
 
         public string SplititApiUsername
-        {
-            get
-            {
-                return GetCookieValue(nameof(SetCredentialsModel.SplititApiUsername)) ?? this._configuration["SplititApiUsername"];
-            }
-        }
-
+            => GetCookieValue(nameof(SetCredentialsModel.SplititApiUsername)) ?? this.CurrentEnvConfig["SplititApiUsername"];
         public string SplititApiPassword
-        {
-            get
-            {
-                return GetCookieValue(nameof(SetCredentialsModel.SplititApiPassword)) ?? this._configuration["SplititApiPassword"];
-            }
-        }
+            => GetCookieValue(nameof(SetCredentialsModel.SplititApiPassword)) ?? this.CurrentEnvConfig["SplititApiPassword"];
 
         public string FlexFieldsUrlRoot
-        {
-            get
-            {
-                return UseProductionUrl ? this._configuration["FlexFieldsUrlRootProduction"] : this._configuration["FlexFieldsUrlRoot"];
-            }
-        }
+            => GetCookieValue(nameof(SetCredentialsModel.FlexFieldsUrlRoot)) ?? this.CurrentEnvConfig["FlexFieldsUrlRoot"];
 
         public string UpstreamUrlRoot
-        {
-            get
-            {
-                return UseProductionUrl ? this._configuration["UpstreamUrlRootProduction"] : this._configuration["UpstreamUrlRoot"];
-            }
-        }
+           => GetCookieValue(nameof(SetCredentialsModel.UpstreamUrlRoot)) ?? this.CurrentEnvConfig["UpstreamUrlRoot"];
     }
 }
