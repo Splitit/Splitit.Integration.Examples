@@ -160,7 +160,7 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
 					{
                         AddressLine = "J. Street 23",
                         City = "Birmingham",
-                        Country = "UK",
+                        Country = "GB",
                         Zip = "48993"
 					}, consumerData: new ConsumerData() {
                         Email = "john+" + DateTime.Now.Millisecond + "@gmail.com" // since john grabbed the @gmail, let him get some spam now and then :D
