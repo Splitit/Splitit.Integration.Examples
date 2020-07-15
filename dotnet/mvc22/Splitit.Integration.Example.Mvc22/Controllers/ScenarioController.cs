@@ -89,6 +89,43 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
             });
         }
 
+        public async Task<IActionResult> Secure3DIframe(int options = 5, decimal amount = 500)
+        {
+            Configuration.Sandbox.SetTouchPoint(new TouchPoint(code: "PaymentWizard"));
+
+            var loginApi = new LoginApi(this.FlexFieldsEnv);
+            var request = new LoginRequest(userName: SplititApiUsername, password: SplititApiPassword);
+
+            var loginResult = await loginApi.LoginPostAsync(request);
+
+            var installmentPlanApi = new InstallmentPlanApi(this.FlexFieldsEnv, sessionId: loginResult.SessionId);
+            var initResponse = installmentPlanApi.InstallmentPlanInitiate(new InitiateInstallmentPlanRequest()
+            {
+                PlanData = new PlanData(
+                    amount: new MoneyWithCurrencyCode(amount, "USD"),
+                    numberOfInstallments: 3,
+                    attempt3DSecure: true,
+                    autoCapture: true),
+                PaymentWizardData = new PaymentWizardData(
+                    requestedNumberOfInstallments: string.Join(",", Enumerable.Range(1, options)),
+                    isOpenedInIframe: true)
+            });
+
+            //PaymentWizard
+            return View(new CommonTestModel()
+            {
+                PublicToken = initResponse.PublicToken /*FlexFields.Authenticate(this.FlexFieldsEnv, SplititApiUsername, SplititApiPassword)
+                    .AddInstallments(Enumerable.Range(1, options).ToList())
+                    .Add3DSecure(new RedirectUrls()
+                    {
+                        Succeeded = $"https://flex-fields.splitit.com/success",
+                        Canceled = "https://flex-fields.splitit.com/cancel",
+                        Failed = "https://flex-fields.splitit.com/failed"
+                    })
+                    .GetPublicToken(amount, "USD")*/
+            });
+        }
+
         public IActionResult Secure3DResponse(string result)
         {
             return Content(result);
@@ -121,11 +158,13 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
                     .AddInstallments(Enumerable.Range(1, options).ToList())
                     .AddBillingInformation(addressData: new AddressData()
 					{
-                        AddressLine = "V. Frane Gotovca",
-                        City = "Zagreb",
-                        Country = "Croatia",
-                        Zip = "10000"
-					})
+                        AddressLine = "J. Street 23",
+                        City = "Birmingham",
+                        Country = "UK",
+                        Zip = "48993"
+					}, consumerData: new ConsumerData() {
+                        Email = "john+" + DateTime.Now.Millisecond + "@gmail.com" // since john grabbed the @gmail, let him get some spam now and then :D
+                    })
                     .GetPublicToken(amount, "USD")
             });
         }
