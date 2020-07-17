@@ -70,8 +70,13 @@
             // Respond here if everything goes well.
             alert('Payment was successful! Check console for result details.');
             console.log(result);
-        }).onRequire3ds1(function (result) {
-            this.redirect3ds1(result);
+        }).onError(function (err) {
+            console.log(err);
+        }).on3dComplete(function (data) {
+            console.log({
+                type: "3d-event",
+                data: data
+            });
         });
 
         function showSplititForm(){

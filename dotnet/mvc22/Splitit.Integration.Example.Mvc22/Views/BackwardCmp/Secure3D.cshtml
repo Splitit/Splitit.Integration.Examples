@@ -82,12 +82,16 @@
             alert('Payment was successful! Check console for result details.');
             console.log(result);
         }).onRequire3ds1(function (result) {
-            this.redirect3ds1(result);/*, true, { 
-                title: "Would you like to be redirected to 3D provider?", 
-                cancelCallback: function(){ 
-                    alert('User cancelled 3D redirect.'); 
-                }    
-            });*/
+            console.log("Triggering 3D secure...");
+            console.log(result);
+            this.redirect3ds1(result);
+        }).onError(function (err) {
+            console.log(err);
+        }).on3dComplete(function (data) {
+            console.log({
+                type: "3d-event",
+                data: data
+            });
         });
 
     </script>

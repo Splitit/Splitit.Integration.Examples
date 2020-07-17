@@ -55,12 +55,7 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
                 BillingAddress = billingAddress,
                 ConsumerData = consumerModel,
                 PaymentWizardData = new PaymentWizardData(
-                    requestedNumberOfInstallments: string.Join(",", Enumerable.Range(1, numOptions)),
-                    isOpenedInIframe: false),
-                RedirectUrls = new RedirectUrls(
-                    succeeded: "https://www.success.com/", 
-                    failed: "https://www.ynet.co.il/", 
-                    canceled: "https://www.walla.com/")
+                    requestedNumberOfInstallments: string.Join(",", Enumerable.Range(1, numOptions)))
             });
 
             return new JsonResult(initResponse);
