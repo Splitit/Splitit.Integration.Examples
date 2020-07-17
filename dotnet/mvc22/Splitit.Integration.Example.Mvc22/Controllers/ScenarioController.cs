@@ -105,29 +105,43 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
         }
 
         [HttpGet]
-        public IActionResult EmbeddedPaymentForm(int options = 5, decimal amount = 500, bool secure3d = false)
+        public async Task<IActionResult> EmbeddedPaymentForm(int options = 5, decimal amount = 500, bool secure3d = false)
         {
-            var ff = FlexFields.Authenticate(this.FlexFieldsEnv, SplititApiUsername, SplititApiPassword)
-                .AddInstallments(Enumerable.Range(1, options).ToList())
-                .AddBillingInformation(addressData: new AddressData()
-                {
-                    AddressLine = "J. Street 23",
-                    City = "Birmingham",
-                    Country = "GB",
-                    Zip = "48993"
-                }, consumerData: new ConsumerData()
-                {
-                    Email = "john+" + DateTime.Now.Millisecond + "@gmail.com" // since john grabbed the @gmail, let him get some spam now and then :D
-                });
+            var loginApi = new LoginApi(this.FlexFieldsEnv);
+            var request = new LoginRequest(userName: SplititApiUsername, password: SplititApiPassword);
 
-            if (secure3d)
-			{
-                ff.Add3DSecure(null);
-			}
+            var loginResult = await loginApi.LoginPostAsync(request);
 
-            return View(new CommonTestModel(){
-                PublicToken = ff.GetPublicToken(amount, "USD")
+            var installmentPlanApi = new InstallmentPlanApi(this.FlexFieldsEnv, sessionId: loginResult.SessionId);
+            var initResponse = installmentPlanApi.InstallmentPlanInitiate(new InitiateInstallmentPlanRequest()
+            {
+                PlanData = new PlanData(
+                    amount: new MoneyWithCurrencyCode(amount, "USD"),
+                    numberOfInstallments: options / 2,
+                    attempt3DSecure: secure3d,
+                    autoCapture: true),
+                BillingAddress = new AddressData()
+				{
+					AddressLine = "J. Street 23",
+					City = "Birmingham",
+					Country = "GB",
+					Zip = "48993"
+				},
+				ConsumerData = new ConsumerData()
+				{
+					Email = "john+" + DateTime.Now.Millisecond + "@gmail.com" // since john grabbed the @gmail, let him get some spam now and then :D
+				},
+				PaymentWizardData = new PaymentWizardData()
+				{
+                    RequestedNumberOfInstallments = string.Join(",", Enumerable.Range(1, options)),
+                    IsOpenedInIframe = true
+                }
             });
-        }
+
+			return View(new CommonTestModel()
+			{
+				PublicToken = initResponse.PublicToken
+            });
+		}
     }
 }
