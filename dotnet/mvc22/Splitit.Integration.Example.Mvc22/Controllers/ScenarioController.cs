@@ -27,66 +27,71 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
             return View();
         }
 
-        public IActionResult Basic(int options = 5, decimal amount = 500)
-        {
-            return View(new CommonTestModel(){
-                PublicToken = FlexFields.Authenticate(this.FlexFieldsEnv, SplititApiUsername, SplititApiPassword)
-                    .AddInstallments(Enumerable.Range(1, options).ToList())
-                    .GetPublicToken(amount, "USD")
-            });
-        }
-
-        public IActionResult Sentry(int options = 5, decimal amount = 500)
+        public IActionResult Basic(int options = 5, decimal amount = 500, string currency = "USD")
         {
             return View(new CommonTestModel()
             {
                 PublicToken = FlexFields.Authenticate(this.FlexFieldsEnv, SplititApiUsername, SplititApiPassword)
                     .AddInstallments(Enumerable.Range(1, options).ToList())
-                    .GetPublicToken(amount, "USD")
+                    .GetPublicToken(amount, currency)
             });
         }
 
-        public IActionResult CardholderName(int options = 5, decimal amount = 500)
+        public IActionResult Sentry(int options = 5, decimal amount = 500, string currency = "USD")
         {
-            return View(new CommonTestModel(){
+            return View(new CommonTestModel()
+            {
+                PublicToken = FlexFields.Authenticate(this.FlexFieldsEnv, SplititApiUsername, SplititApiPassword)
+                    .AddInstallments(Enumerable.Range(1, options).ToList())
+                    .GetPublicToken(amount, currency)
+            });
+        }
+
+        public IActionResult CardholderName(int options = 5, decimal amount = 500, string currency = "USD")
+        {
+            return View(new CommonTestModel()
+            {
                 PublicToken = FlexFields.Authenticate(Configuration.Sandbox, SplititApiUsername, SplititApiPassword)
                     .AddInstallments(Enumerable.Range(1, options).ToList())
-                    .GetPublicToken(amount, "USD")
+                    .GetPublicToken(amount, currency)
             });
         }
 
-        public IActionResult AutoCapture(int options = 5, decimal amount = 500)
+        public IActionResult AutoCapture(int options = 5, decimal amount = 500, string currency = "USD")
         {
-            return View(new CommonTestModel(){
+            return View(new CommonTestModel()
+            {
                 PublicToken = FlexFields.Authenticate(this.FlexFieldsEnv, SplititApiUsername, SplititApiPassword)
                     .AddInstallments(Enumerable.Range(1, options).ToList())
                     .AddCaptureSettings(autoCapture: true)
-                    .GetPublicToken(amount, "USD")
+                    .GetPublicToken(amount, currency)
             });
         }
 
-        public IActionResult DeferredCapture(int options = 5, decimal amount = 500, decimal firstInstallment = 100, int delayDays = 10)
+        public IActionResult DeferredCapture(int options = 5, decimal amount = 500, decimal firstInstallment = 100, int delayDays = 10, string currency = "USD")
         {
-            return View(new CommonTestModel(){
+            return View(new CommonTestModel()
+            {
                 PublicToken = FlexFields.Authenticate(this.FlexFieldsEnv, SplititApiUsername, SplititApiPassword)
                     .AddInstallments(Enumerable.Range(1, options).ToList())
-                    .AddCaptureSettings(firstInstallmentAmount: firstInstallment, currencyCode: "USD", firstChargeDate: DateTime.Now.AddDays(delayDays))
-                    .GetPublicToken(amount, "USD")
+                    .AddCaptureSettings(firstInstallmentAmount: firstInstallment, currencyCode: currency, firstChargeDate: DateTime.Now.AddDays(delayDays))
+                    .GetPublicToken(amount, currency)
             });
         }
 
-        public IActionResult Secure3D(int options = 5, decimal amount = 500)
+        public IActionResult Secure3D(int options = 5, decimal amount = 500, string currency = "USD")
         {
-            return View(new CommonTestModel(){
+            return View(new CommonTestModel()
+            {
                 PublicToken = FlexFields.Authenticate(this.FlexFieldsEnv, SplititApiUsername, SplititApiPassword)
                     .AddInstallments(Enumerable.Range(1, options).ToList())
                     .Add3DSecure(new RedirectUrls())
-                    .GetPublicToken(amount, "USD")
+                    .GetPublicToken(amount, currency)
             });
         }
 
         [HttpGet]
-        public IActionResult AjaxPublicToken(int options = 5, decimal amount = 500)
+        public IActionResult AjaxPublicToken(int options = 5, decimal amount = 500, string currency = "USD")
         {
             ViewBag.Options = options;
             ViewBag.Amount = amount;
@@ -95,17 +100,18 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
 
         [HttpPost]
         [ActionName("AjaxPublicToken")]
-        public IActionResult AjaxPublicTokenPost(int options = 5, decimal amount = 500)
+        public IActionResult AjaxPublicTokenPost(int options = 5, decimal amount = 500, string currency = "USD")
         {
-            return Json(new CommonTestModel(){
+            return Json(new CommonTestModel()
+            {
                 PublicToken = FlexFields.Authenticate(this.FlexFieldsEnv, SplititApiUsername, SplititApiPassword)
                     .AddInstallments(Enumerable.Range(1, options).ToList())
-                    .GetPublicToken(amount, "USD")
+                    .GetPublicToken(amount, currency)
             });
         }
 
         [HttpGet]
-        public async Task<IActionResult> EmbeddedPaymentForm(int options = 5, decimal amount = 500, bool secure3d = false)
+        public async Task<IActionResult> EmbeddedPaymentForm(int options = 5, decimal amount = 500, bool secure3d = false, string currency = "USD")
         {
             var loginApi = new LoginApi(this.FlexFieldsEnv);
             var request = new LoginRequest(userName: SplititApiUsername, password: SplititApiPassword);
@@ -116,7 +122,7 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
             var initResponse = installmentPlanApi.InstallmentPlanInitiate(new InitiateInstallmentPlanRequest()
             {
                 PlanData = new PlanData(
-                    amount: new MoneyWithCurrencyCode(amount, "USD"),
+                    amount: new MoneyWithCurrencyCode(amount, currency),
                     numberOfInstallments: options / 2,
                     attempt3DSecure: secure3d,
                     autoCapture: true),
