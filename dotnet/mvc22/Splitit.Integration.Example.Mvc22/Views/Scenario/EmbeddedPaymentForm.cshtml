@@ -25,15 +25,18 @@
     <script src="@Credentials.PaymentFormEmbedderUrlRoot/e/pf-embedded.js?v=@(System.DateTime.Now.Ticks)"></script>
 
     <script>
-        Splitit.PaymentFormEmbedded.host.setup({
-            token: '@Model.PublicToken',
+        Splitit.Popup.setup({
+            publicToken: '@Model.PublicToken',
             url: '@Credentials.PaymentFormEmbedderUrlRoot',
             container: '#splitit-payment-container',
-            onError: function(){
+            onError: function () {
+                console.log('error');
                 $("#error-alert").show();
                 $("#splitit-payment-container").hide();
             },
-            onSuccess: function(){
+            onSuccess: function (data) {
+                console.log('success');
+                console.log(data);
                 $("#success-alert").show();
                 $("#splitit-payment-container").hide();
             }
