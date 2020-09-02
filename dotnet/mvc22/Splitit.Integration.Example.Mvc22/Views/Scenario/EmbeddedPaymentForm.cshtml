@@ -27,10 +27,17 @@
 	<script>
         Splitit.Popup.setup({
             popupUrl: '@Credentials.PaymentFormEmbedderUrlRoot',
-
+			__style: {
+				buttonStyle: {
+					text: "Text button."
+				},
+				poweredByStyle: {
+					text: "Text powered by."
+				}
+			},
 			_style: {
-				frameHeight: "800px",
-				frameWidth: "800px",
+				_frameHeight: "800px",
+				_frameWidth: "800px",
 				buttonStyle: {
 					border: "2px solid brown",
 					borderRadius: "0",
@@ -42,7 +49,9 @@
 					color: "blue",
 					padding: "11px",
 					align: "right",
-					float: "right"
+					float: "right",
+
+					text: "Text button."
 				},
 				poweredByStyle: {
 					border: "2px solid brown",
@@ -57,7 +66,8 @@
 					align: "right",
 					float: "right",
 
-					display: "none"
+					display: "none",
+					text: "Text powered by."
 				},
 				containerStyle: {
 					border: "2px solid brown",
