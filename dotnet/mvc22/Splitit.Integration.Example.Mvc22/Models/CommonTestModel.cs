@@ -6,5 +6,6 @@ namespace Splitit.Integration.Example.Mvc22.Models
     {
         public string InstallmentOptions { get; set; }
         public string PublicToken {get;set;}
+        public string CheckoutUrl { get; set; }
     }
 }

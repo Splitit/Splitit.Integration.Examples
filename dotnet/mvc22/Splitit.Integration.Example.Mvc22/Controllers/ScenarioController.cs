@@ -146,7 +146,8 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
 
 			return View(new CommonTestModel()
 			{
-				PublicToken = initResponse.PublicToken
+				PublicToken = initResponse.PublicToken,
+                CheckoutUrl = initResponse.CheckoutUrl
             });
 		}
     }

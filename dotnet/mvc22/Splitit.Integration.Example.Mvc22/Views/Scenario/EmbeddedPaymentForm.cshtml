@@ -3,8 +3,8 @@
 @inject CredentialSource Credentials
 
 @{
-    ViewData["Title"] = "Embedded PFv3 - PoC";
-    Layout = "_Layout";
+	ViewData["Title"] = "Embedded PFv3 - PoC";
+	Layout = "_Layout";
 }
 
 <h1>@ViewData["Title"]</h1>
@@ -14,20 +14,66 @@
 </div>
 
 <div id="success-alert" class="alert alert-success" style="display: none;">
-    Your payment was successful!
+	Your payment was successful!
 </div>
 
 <div id="error-alert" class="alert alert-danger" style="display: none;">
-    Your payment failed.
+	Your payment failed.
 </div>
 
 @section Scripts {
-    <script src="@Credentials.PaymentFormEmbedderUrlRoot/e/pf-embedded.js?v=@(System.DateTime.Now.Ticks)"></script>
+	<script src="@Credentials.PaymentFormEmbedderUrlRoot/pf-embedded.js?v=@(System.DateTime.Now.Ticks)"></script>
 
-    <script>
+	<script>
         Splitit.Popup.setup({
-            publicToken: '@Model.PublicToken',
-            url: '@Credentials.PaymentFormEmbedderUrlRoot',
+            popupUrl: '@Credentials.PaymentFormEmbedderUrlRoot',
+
+			_style: {
+				frameHeight: "800px",
+				frameWidth: "800px",
+				buttonStyle: {
+					border: "2px solid brown",
+					borderRadius: "0",
+					bgColor: "red",
+					fontSize: "8px",
+					fontFamily: "Times New Roman",
+					width: "400px",
+					height: "100px",
+					color: "blue",
+					padding: "11px",
+					align: "right",
+					float: "right"
+				},
+				poweredByStyle: {
+					border: "2px solid brown",
+					borderRadius: "0",
+					bgColor: "red",
+					fontSize: "8px",
+					fontFamily: "Times New Roman",
+					width: "400px",
+					height: "100px",
+					color: "blue",
+					padding: "11px",
+					align: "right",
+					float: "right",
+
+					display: "none"
+				},
+				containerStyle: {
+					border: "2px solid brown",
+					borderRadius: "0",
+					bgColor: "red",
+					fontSize: "8px",
+					fontFamily: "Times New Roman",
+					width: "400px",
+					height: "100px",
+					color: "blue",
+					padding: "11px",
+					align: "right",
+					float: "right"
+				}
+			},
+            checkoutUrl: '@Model.CheckoutUrl',
             container: '#splitit-payment-container',
             onError: function () {
                 console.log('error');
@@ -41,5 +87,5 @@
                 $("#splitit-payment-container").hide();
             }
         });
-    </script>
+	</script>
 }
