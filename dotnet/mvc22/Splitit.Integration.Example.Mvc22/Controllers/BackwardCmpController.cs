@@ -92,7 +92,7 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
         public IActionResult WithUpstream() => View();
 
         public async Task<IActionResult> OrderComplete(string planNumber){
-            var amount = 1880; // Usually this comes from DB.
+            var amount = 860; // Usually this comes from DB.
 
             var loginApi = new LoginApi(this.FlexFieldsEnv);
             var request = new LoginRequest(userName: SplititApiUsername, password: SplititApiPassword);
