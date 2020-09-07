@@ -26,138 +26,156 @@
             </th>
         </tr>
     </thead>
-    <tbody>
-        <tr>
-            <td>
-                Basic
-            </td>
-            <td>
-                <form class="form-inline" asp-action="Basic" method="GET">
-                    <label>Options</label>
-                    <input type="text" class="form-control" placeholder="Num. options" value="5" name="options">
-                    <label>Amount</label>
-                    <input type="text" class="form-control" placeholder="Amount" value="400" name="amount">
-                    <label>Currency</label>
-                    <input type="text" class="form-control" placeholder="Currency" value="USD" name="currency">
-                </form>
-            </td>
-            <td>
-                <a class="btn btn-primary" onclick="$(this).closest('tr').find('form').submit();">Run</a>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                3D Secure
-            </td>
-            <td>
-                <form class="form-inline" asp-action="Secure3D" method="GET">
-                    <label>Options</label>
-                    <input type="text" class="form-control" placeholder="Num. options" value="5" name="options">
-                    <label>Amount</label>
-                    <input type="text" class="form-control" placeholder="Amount" value="400" name="amount">
-                    <label>Currency</label>
-                    <input type="text" class="form-control" placeholder="Currency" value="USD" name="currency">
-                </form>
-            </td>
-            <td>
-                <a class="btn btn-primary" onclick="$(this).closest('tr').find('form').submit();">Run</a>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                AutoCapture flag
-            </td>
-            <td>
-                <form class="form-inline" asp-action="AutoCapture" method="GET">
-                    <label>Options</label>
-                    <input type="text" class="form-control" placeholder="Num. options" value="5" name="options">
-                    <label>Amount</label>
-                    <input type="text" class="form-control" placeholder="Amount" value="400" name="amount">
-                    <label>Currency</label>
-                    <input type="text" class="form-control" placeholder="Currency" value="USD" name="currency">
-                </form>
-            </td>
-            <td>
-                <a class="btn btn-primary" onclick="$(this).closest('tr').find('form').submit();">Run</a>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                AJAX Public Token
-            </td>
-            <td>
-                <form class="form-inline" asp-action="AjaxPublicToken" method="GET">
-                    <label>Options</label>
-                    <input type="text" class="form-control" placeholder="Num. options" value="5" name="options">
-                    <label>Amount</label>
-                    <input type="text" class="form-control" placeholder="Amount" value="400" name="amount">
-                    <label>Currency</label>
-                    <input type="text" class="form-control" placeholder="Currency" value="USD" name="currency">
-                </form>
-            </td>
-            <td>
-                <a class="btn btn-primary" onclick="$(this).closest('tr').find('form').submit();">Run</a>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                Deferred capture
-            </td>
-            <td>
-                <form class="form-inline" asp-action="DeferredCapture" method="GET">
-                    <label>Options</label>
-                    <input type="text" style="max-width: 80px;" class="form-control" placeholder="Num. options" value="5" name="options">
-                    <label>Amount</label>
-                    <input type="text" style="max-width: 80px;" class="form-control" placeholder="Amount" value="400" name="amount">
-                    <label>Currency</label>
-                    <input type="text" class="form-control" placeholder="Currency" value="USD" name="currency">
-                    <label>Delay (days)</label>
-                    <input type="text" style="max-width: 80px;" class="form-control" placeholder="Delay" value="10" name="delayDays">
-                    <label>Deposit</label>
-                    <input type="text" style="max-width: 80px;" class="form-control" placeholder="First installment" value="200" name="firstInstallment">
-                </form>
-            </td>
-            <td>
-                <a class="btn btn-primary" onclick="$(this).closest('tr').find('form').submit();">Run</a>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                Cardholder Name
-            </td>
-            <td>
-                <form class="form-inline" asp-action="CardholderName" method="GET">
-                    <label>Options</label>
-                    <input type="text" class="form-control" placeholder="Num. options" value="5" name="options">
-                    <label>Amount</label>
-                    <input type="text" class="form-control" placeholder="Amount" value="400" name="amount">
-                    <label>Currency</label>
-                    <input type="text" class="form-control" placeholder="Currency" value="USD" name="currency">
-                </form>
-            </td>
-            <td>
-                <a class="btn btn-primary" onclick="$(this).closest('tr').find('form').submit();">Run</a>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                Popup payment form
-            </td>
-            <td>
-                <form class="form-inline" asp-action="EmbeddedPaymentForm" method="GET">
-                    <label>Options</label>
-                    <input type="text" class="form-control" placeholder="Num. options" value="5" name="options">
-                    <label>Amount</label>
-                    <input type="text" class="form-control" placeholder="Amount" value="400" name="amount">
-                    <label>Currency</label>
-                    <input type="text" class="form-control" placeholder="Currency" value="USD" name="currency">
-                    <input type="checkbox" class="form-control" value="true" name="secure3d">
-                    <label for="secure3d">Secure 3D</label>
-                </form>
-            </td>
-            <td>
-                <a class="btn btn-primary" onclick="$(this).closest('tr').find('form').submit();">Run</a>
-            </td>
-        </tr>
-    </tbody>
+	<tbody>
+		<tr>
+			<td>
+				Basic
+			</td>
+			<td>
+				<form class="form-inline" asp-action="Basic" method="GET">
+					<label>Options</label>
+					<input type="text" class="form-control" placeholder="Num. options" value="5" name="options">
+					<label>Amount</label>
+					<input type="text" class="form-control" placeholder="Amount" value="400" name="amount">
+					<label>Currency</label>
+					<input type="text" class="form-control" placeholder="Currency" value="USD" name="currency">
+				</form>
+			</td>
+			<td>
+				<a class="btn btn-primary" onclick="$(this).closest('tr').find('form').submit();">Run</a>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				3D Secure
+			</td>
+			<td>
+				<form class="form-inline" asp-action="Secure3D" method="GET">
+					<label>Options</label>
+					<input type="text" class="form-control" placeholder="Num. options" value="5" name="options">
+					<label>Amount</label>
+					<input type="text" class="form-control" placeholder="Amount" value="400" name="amount">
+					<label>Currency</label>
+					<input type="text" class="form-control" placeholder="Currency" value="USD" name="currency">
+				</form>
+			</td>
+			<td>
+				<a class="btn btn-primary" onclick="$(this).closest('tr').find('form').submit();">Run</a>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				AutoCapture flag
+			</td>
+			<td>
+				<form class="form-inline" asp-action="AutoCapture" method="GET">
+					<label>Options</label>
+					<input type="text" class="form-control" placeholder="Num. options" value="5" name="options">
+					<label>Amount</label>
+					<input type="text" class="form-control" placeholder="Amount" value="400" name="amount">
+					<label>Currency</label>
+					<input type="text" class="form-control" placeholder="Currency" value="USD" name="currency">
+				</form>
+			</td>
+			<td>
+				<a class="btn btn-primary" onclick="$(this).closest('tr').find('form').submit();">Run</a>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				AJAX Public Token
+			</td>
+			<td>
+				<form class="form-inline" asp-action="AjaxPublicToken" method="GET">
+					<label>Options</label>
+					<input type="text" class="form-control" placeholder="Num. options" value="5" name="options">
+					<label>Amount</label>
+					<input type="text" class="form-control" placeholder="Amount" value="400" name="amount">
+					<label>Currency</label>
+					<input type="text" class="form-control" placeholder="Currency" value="USD" name="currency">
+				</form>
+			</td>
+			<td>
+				<a class="btn btn-primary" onclick="$(this).closest('tr').find('form').submit();">Run</a>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Deferred capture
+			</td>
+			<td>
+				<form class="form-inline" asp-action="DeferredCapture" method="GET">
+					<label>Options</label>
+					<input type="text" style="max-width: 80px;" class="form-control" placeholder="Num. options" value="5" name="options">
+					<label>Amount</label>
+					<input type="text" style="max-width: 80px;" class="form-control" placeholder="Amount" value="400" name="amount">
+					<label>Currency</label>
+					<input type="text" class="form-control" placeholder="Currency" value="USD" name="currency">
+					<label>Delay (days)</label>
+					<input type="text" style="max-width: 80px;" class="form-control" placeholder="Delay" value="10" name="delayDays">
+					<label>Deposit</label>
+					<input type="text" style="max-width: 80px;" class="form-control" placeholder="First installment" value="200" name="firstInstallment">
+				</form>
+			</td>
+			<td>
+				<a class="btn btn-primary" onclick="$(this).closest('tr').find('form').submit();">Run</a>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Cardholder Name
+			</td>
+			<td>
+				<form class="form-inline" asp-action="CardholderName" method="GET">
+					<label>Options</label>
+					<input type="text" class="form-control" placeholder="Num. options" value="5" name="options">
+					<label>Amount</label>
+					<input type="text" class="form-control" placeholder="Amount" value="400" name="amount">
+					<label>Currency</label>
+					<input type="text" class="form-control" placeholder="Currency" value="USD" name="currency">
+				</form>
+			</td>
+			<td>
+				<a class="btn btn-primary" onclick="$(this).closest('tr').find('form').submit();">Run</a>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Popup payment form
+			</td>
+			<td>
+				<form class="form-inline" asp-action="EmbeddedPaymentForm" method="GET">
+					<label>Options</label>
+					<input type="text" class="form-control" placeholder="Num. options" value="5" name="options">
+					<label>Amount</label>
+					<input type="text" class="form-control" placeholder="Amount" value="400" name="amount">
+					<label>Currency</label>
+					<input type="text" class="form-control" placeholder="Currency" value="USD" name="currency">
+					<input type="checkbox" class="form-control" value="true" name="secure3d">
+					<label for="secure3d">Secure 3D</label>
+				</form>
+			</td>
+			<td>
+				<a class="btn btn-primary" onclick="$(this).closest('tr').find('form').submit();">Run</a>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Preselected num. inst.
+			</td>
+			<td>
+				<form class="form-inline" asp-action="PreselectedNumInstallments" method="GET">
+					<label>Preselect num. of inst.</label>
+					<input type="text" class="form-control" placeholder="Preselected num of inst." value="10" name="preselectedOption">
+					<label>Amount</label>
+					<input type="text" class="form-control" placeholder="Amount" value="400" name="amount">
+					<label>Currency</label>
+					<input type="text" class="form-control" placeholder="Currency" value="USD" name="currency">
+				</form>
+			</td>
+			<td>
+				<a class="btn btn-primary" onclick="$(this).closest('tr').find('form').submit();">Run</a>
+			</td>
+		</tr>
+	</tbody>
 </table>
