@@ -19,3 +19,6 @@ ingress:
     - /*
     port: https
 
+istio:
+  hosts:
+  - examples.sandbox.splitit.com
