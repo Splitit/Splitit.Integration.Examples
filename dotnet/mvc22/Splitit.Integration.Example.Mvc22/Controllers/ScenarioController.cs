@@ -27,13 +27,14 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
             return View();
         }
 
-        public IActionResult Basic(int options = 5, decimal amount = 500, string currency = "USD")
+        public IActionResult Basic(int options = 5, decimal amount = 500, string currency = "USD", string culture = "en-US")
         {
             return View(new CommonTestModel()
             {
                 PublicToken = FlexFields.Authenticate(this.FlexFieldsEnv, SplititApiUsername, SplititApiPassword)
                     .AddInstallments(Enumerable.Range(1, options).ToList())
-                    .GetPublicToken(amount, currency)
+                    .GetPublicToken(amount, currency),
+                Culture = culture
             });
         }
 
