@@ -80,7 +80,9 @@
             console.log(result);
         }).onError(function (result) {
             console.log(result);
-            $("#btn-pay").removeAttr('disabled');
+            if (!result || result.length == 0) {
+				$("#btn-pay").removeAttr('disabled');
+			}
         });
 
         function performPayment(sender){
