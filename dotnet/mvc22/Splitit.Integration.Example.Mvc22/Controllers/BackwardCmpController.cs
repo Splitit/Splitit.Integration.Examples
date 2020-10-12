@@ -83,7 +83,6 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
         public IActionResult Demo() => View();
         public IActionResult NonGrouped() => View();
         public IActionResult PascalCase() => View();
-        public IActionResult PaymentScheduleJS() => View();
         public IActionResult Secure3D() => View();
         public IActionResult Security() => View();
         public IActionResult ShowOnDemand() => View();
