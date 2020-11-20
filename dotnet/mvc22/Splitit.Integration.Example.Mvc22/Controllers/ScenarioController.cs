@@ -59,6 +59,17 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
             });
         }
 
+        public IActionResult CustomEvents(int options = 5, decimal amount = 500, string currency = "USD", string culture = "en-US")
+        {
+            return View(new CommonTestModel()
+            {
+                PublicToken = FlexFields.Authenticate(this.FlexFieldsEnv, SplititApiUsername, SplititApiPassword)
+                    .AddInstallments(Enumerable.Range(1, options).ToList())
+                    .GetPublicToken(amount, currency),
+                Culture = culture
+            });
+        }
+
         public IActionResult PreselectedNumInstallments(int options = 12, decimal amount = 500, int preselectedOption = 10, string currency = "USD")
         {
             return View(new CommonTestModel()

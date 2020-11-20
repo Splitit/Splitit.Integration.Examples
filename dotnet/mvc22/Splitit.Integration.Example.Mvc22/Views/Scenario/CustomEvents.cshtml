@@ -1,0 +1,108 @@
+﻿@model CommonTestModel
+@{
+    ViewData["Title"] = "Flex Fields - Custom events";
+}
+
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+<h1>@ViewData["Title"]</h1>
+
+
+
+<div class="row">
+	<div class="col-md-6">
+		<div>
+			<button type="button" style="padding: 10px; margin-bottom: 10px;" onclick="flexFieldsInstance.toggle()">Choose Splitit Payment Option</button>
+		</div>
+		<div class="splitit-default-ui grouped" id="splitit-card-data">
+			<div class="splitit-cc-group">
+				<div id="card-number"></div>
+				<div id="expiration-date"></div>
+				<div id="cvv"></div>
+				<div class="splitit-cc-group-separator"></div>
+			</div>
+
+			<div id="installment-picker"></div>
+			<div id="terms-conditions"></div>
+			<button id="btn-pay"></button>
+		</div>
+	</div>
+	<div class="col-md-6">
+		<table id="custom-event-box" class="table table-condensed">
+			<thead>
+				<tr>
+					<th>Event name</th>
+					<th>Old value</th>
+					<th>New value</th>
+				</tr>
+			</thead>
+			<tbody>
+			</tbody>
+
+		</table>
+	</div>
+</div>
+
+
+
+
+
+@section Scripts {
+    <script>
+        var flexFieldsInstance = Splitit.FlexFields.setup({
+            debug: true,
+            culture: '@Model.Culture',
+            publicToken: '@Model.PublicToken',
+            container: '#splitit-card-data',
+            fields: {
+                number: {
+                    selector: "#card-number"
+                },
+                cvv: {
+                    selector: "#cvv"
+                },
+                expirationDate: {
+                    selector: "#expiration-date"
+                }
+            },
+            installmentPicker: {
+                selector: "#installment-picker"
+            },
+            termsConditions: {
+                selector: "#terms-conditions"
+            },
+            paymentButton: {
+                selector: "#btn-pay"
+            }
+        }).ready(function () {
+            var splititFlexFields = this;
+
+            splititFlexFields.updateDetails({
+                billingAddress: {
+                    AddressLine: "260 Madison Avenue.",
+                    AddressLine2: "Appartment 1",
+                    City: "New York",
+                    State: "NY",
+                    Country: "USA",
+                    Zip: "10016"
+                },
+                consumerData: {
+                    FullName: "Eyal Hason",
+                    Email: "eyal.hason@splitit.com",
+                    PhoneNumber: "+972-52-1118333",
+                    CultureName: "en-us"
+                }
+            });
+        }).onSuccess(function (result) {
+            // Respond here if everything goes well.
+            alert('Payment was successful! Check console for result details.');
+            console.log(result);
+        }).onEvent(function (ev, old, newVal) {
+            $("#custom-event-box tbody").append('<tr><td>' + ev + '</td><td>' + old + '</td><td>' + newVal + '</td></tr>');
+        });
+
+        function showSplititForm(){
+            flexFieldsInstance.toggle();
+        }
+    </script>
+}
