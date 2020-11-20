@@ -6,8 +6,8 @@ resources:
     memory: 2Gi
 
 hpa:
-  minReplicas: 3
-  maxReplicas: 6
+  minReplicas: 1
+  maxReplicas: 2
 
 ingress:
   enabled: true

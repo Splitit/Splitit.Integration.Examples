@@ -7,7 +7,7 @@ env:
 readinessProbe:
   initialDelaySeconds: 20
   periodSeconds: 10
-  successThreshold: 2
+  successThreshold: 1
   httpGet:
     path: /health-check
     port: https
