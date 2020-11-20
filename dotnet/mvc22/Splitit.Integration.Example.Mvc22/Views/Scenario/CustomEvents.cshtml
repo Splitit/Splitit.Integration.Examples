@@ -43,9 +43,19 @@
 	</div>
 </div>
 
-
-
-
+<h3>Relevant code example</h3>
+<p>To see list of all supported events, expand Flex Fields above and note events being fired.</p>
+<div>
+	<pre>var flexFieldsInstance = Splitit.FlexFields.setup({
+            ...
+        }).ready(function () {
+            ...
+        }).onSuccess(function (result) {
+            ...
+        }).onEvent(function (ev, old, newVal) {
+            <strong>$(&quot;#custom-event-box tbody&quot;).append(&#39;&lt;tr&gt;&lt;td&gt;&#39; + ev + &#39;&lt;/td&gt;&lt;td&gt;&#39; + old + &#39;&lt;/td&gt;&lt;td&gt;&#39; + newVal + &#39;&lt;/td&gt;&lt;/tr&gt;&#39;);</strong>
+        });</pre>
+</div>
 
 @section Scripts {
     <script>
