@@ -227,5 +227,21 @@
 				<a class="btn btn-primary" onclick="$(this).closest('tr').find('form').submit();">Run</a>
 			</td>
 		</tr>
+		<tr>
+			<td>
+				Amount change
+			</td>
+			<td>
+				<form class="form-inline" asp-action="AmountChange" method="GET">
+					<label>Amount</label>
+					<input type="text" class="form-control" placeholder="Amount" value="400" name="amount">
+					<label>Currency</label>
+					<input type="text" class="form-control" placeholder="Currency" value="USD" name="currency">
+				</form>
+			</td>
+			<td>
+				<a class="btn btn-primary" onclick="$(this).closest('tr').find('form').submit();">Run</a>
+			</td>
+		</tr>
 	</tbody>
 </table>

@@ -193,5 +193,35 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
                 CheckoutUrl = initResponse.CheckoutUrl
             });
 		}
+
+        public IActionResult AmountChange(int options = 5, decimal amount = 500, string currency = "USD", string culture = "en-US")
+        {
+            return View(new CommonTestModel()
+            {
+                PublicToken = FlexFields.Authenticate(this.FlexFieldsEnv, SplititApiUsername, SplititApiPassword)
+                    .AddInstallments(Enumerable.Range(1, options).ToList())
+                    .GetPublicToken(amount, currency),
+                Currency = currency,
+                Culture = culture
+            });
+        }
+
+        public async Task<IActionResult> AmountChangeAjaxAsync(string planNumber, decimal newAmount, string currency = "USD")
+        {
+            var loginApi = new LoginApi(this.FlexFieldsEnv);
+            var request = new LoginRequest(userName: SplititApiUsername, password: SplititApiPassword);
+
+            var loginResult = await loginApi.LoginPostAsync(request);
+
+            var installmentPlanApi = new InstallmentPlanApi(this.FlexFieldsEnv, sessionId: loginResult.SessionId);
+            var initResponse = installmentPlanApi.InstallmentPlanInitiate(new InitiateInstallmentPlanRequest()
+            {
+                InstallmentPlanNumber = planNumber,
+                PlanData = new PlanData(
+                    amount: new MoneyWithCurrencyCode(newAmount, currency))
+            });
+
+            return Json(initResponse);
+        }
     }
 }

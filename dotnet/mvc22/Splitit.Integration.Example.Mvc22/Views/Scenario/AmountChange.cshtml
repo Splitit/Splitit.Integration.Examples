@@ -1,0 +1,150 @@
+﻿@model CommonTestModel
+@{
+	ViewData["Title"] = "Flex Fields - Amount change";
+}
+
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="row">
+	<div class="col-md-6">
+		<div>
+			<button type="button" style="padding: 10px; margin-bottom: 10px;" onclick="flexFieldsInstance.toggle()">Choose Splitit Payment Option</button>
+		</div>
+		<div class="splitit-default-ui grouped" id="splitit-card-data">
+			<div class="splitit-cc-group">
+				<div id="card-number"></div>
+				<div id="expiration-date"></div>
+				<div id="cvv"></div>
+				<div class="splitit-cc-group-separator"></div>
+			</div>
+
+			<div id="installment-picker"></div>
+			<div id="error-box"></div>
+			<div id="terms-conditions"></div>
+			<button id="btn-pay"></button>
+		</div>
+	</div>
+	<div class="col-md-6 new-amount-form-wrapper">
+		<h2>Choose the new amount</h2>
+		<p>
+			Important security notice: This functionality is here for demo only. You should never expose it in production environment since any user could alter
+			the plan amount this way. Change the plan amount securely from server side using backchannel communication to Splitit servers based on your internal logic.
+		</p>
+		<div class="form-group">
+			<label>New amount:</label>
+			<input type="text" class="form-control" placeholder="New amount" id="newAmount">
+		</div>
+		<div class="form-group">
+			<label>Currency:</label>
+			<input type="text" class="form-control" placeholder="Currency, ex: USD" name="currency" value="@Model.Currency" readonly>
+            <small class="form-text text-muted">Currency cannot be changed later.</small>
+		</div>
+		<button class="btn btn-danger" type="button" onclick="setNewAmount(this)">Set new amount</button>
+
+        <script type="text/javascript">
+            function setNewAmount(btn) {
+                var newAmount = parseFloat($(btn).closest('.new-amount-form-wrapper').find('#newAmount').val());
+                var currency = '@Model.Currency';
+				var planNumber = flexFieldsInstance.getSessionParams().planNumber;
+
+                // We recommend showing custom loader over flex fields to avoid any race conditions.
+
+                $.ajax({
+                    url: '@Url.Action("AmountChangeAjaxAsync")',
+                    data: {
+                        newAmount, currency, planNumber
+                    },
+                    method: "POST",
+                    success: function (data) {
+                        console.log('Call to AJAX set currency result:');
+                        console.log(data);
+                        
+                        flexFieldsInstance.synchronizePlan();
+                    }
+                });
+			}
+        </script>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-12">
+		<h3>Relevant code example</h3>
+		<p>After plan changes in backend, call the following method to update the amount:</p>
+		<div>
+			<pre>var flexFieldsInstance = Splitit.FlexFields.setup({
+    ...
+}).ready(function () {
+    ...
+});
+
+function planAmountUpdatedOnMerchantSite(){
+    <strong>flexFieldsInstance.synchronizePlan();</strong>
+}</pre>
+		</div>
+	</div>
+</div>
+
+
+@section Scripts {
+	<script>
+        var flexFieldsInstance = Splitit.FlexFields.setup({
+            debug: true,
+            culture: '@Model.Culture',
+            publicToken: '@Model.PublicToken',
+            container: '#splitit-card-data',
+            fields: {
+                number: {
+                    selector: "#card-number"
+                },
+                cvv: {
+                    selector: "#cvv"
+                },
+                expirationDate: {
+                    selector: "#expiration-date"
+                }
+            },
+            installmentPicker: {
+                selector: "#installment-picker"
+            },
+            termsConditions: {
+                selector: "#terms-conditions"
+            },
+            errorBox: {
+                selector: "#error-box"
+            },
+            paymentButton: {
+                selector: "#btn-pay"
+            }
+        }).ready(function () {
+            var splititFlexFields = this;
+
+            splititFlexFields.updateDetails({
+                billingAddress: {
+                    AddressLine: "260 Madison Avenue.",
+                    AddressLine2: "Appartment 1",
+                    City: "New York",
+                    State: "NY",
+                    Country: "USA",
+                    Zip: "10016"
+                },
+                consumerData: {
+                    FullName: "John Smith",
+                    Email: "JohnS@splitit.com",
+                    PhoneNumber: "1-844-775-4848",
+                    CultureName: "en-us"
+                }
+            });
+        }).onSuccess(function (result) {
+            // Respond here if everything goes well.
+            alert('Payment was successful! Check console for result details.');
+            console.log(result);
+        });
+
+        function showSplititForm(){
+            flexFieldsInstance.toggle();
+        }
+	</script>
+}
