@@ -243,5 +243,26 @@
 				<a class="btn btn-primary" onclick="$(this).closest('tr').find('form').submit();">Run</a>
 			</td>
 		</tr>
+		<tr>
+			<td>
+				Design chooser
+			</td>
+			<td>
+				<form class="form-inline" asp-action="DesignChooser" method="GET">
+					<input type="hidden" value="400" name="amount" />
+					<input type="hidden" value="USD" name="currency" />
+					<label>Design</label>
+					<select name="design" class="form-control">
+						<option value="splitit-default-ui grouped">Old (grouped)</option>
+						<option value="splitit-default-ui">Old</option>
+						<option value="splitit-design-classic">Classic</option>
+						<option value="splitit-design-horizontal">Horizontal</option>
+					</select>
+				</form>
+			</td>
+			<td>
+				<a class="btn btn-primary" onclick="$(this).closest('tr').find('form').submit();">Run</a>
+			</td>
+		</tr>
 	</tbody>
 </table>

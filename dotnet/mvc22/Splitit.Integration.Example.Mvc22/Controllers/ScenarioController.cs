@@ -223,5 +223,19 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
 
             return Json(initResponse);
         }
+
+        public IActionResult DesignChooser(int options = 5, decimal amount = 500, string currency = "USD", string culture = "en-US", string design = "splitit-default-ui grouped", string picker = null)
+        {
+            return View(new CommonTestModel()
+            {
+                PublicToken = FlexFields.Authenticate(this.FlexFieldsEnv, SplititApiUsername, SplititApiPassword)
+                    .AddInstallments(Enumerable.Range(1, options).ToList())
+                    .GetPublicToken(amount, currency),
+                Currency = currency,
+                Culture = culture,
+                Design = design,
+                Picker = picker
+            });
+        }
     }
 }

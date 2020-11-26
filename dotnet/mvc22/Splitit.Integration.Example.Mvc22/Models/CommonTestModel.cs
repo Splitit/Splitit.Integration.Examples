@@ -9,5 +9,7 @@ namespace Splitit.Integration.Example.Mvc22.Models
         public string CheckoutUrl { get; set; }
         public string Culture { get; set; } = "en-US";
         public string Currency { get; set; }
+        public string Design { get; internal set; }
+        public string Picker { get; internal set; }
     }
 }
