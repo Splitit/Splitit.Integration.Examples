@@ -28,6 +28,12 @@
 		</div>
 	</div>
 	<div class="col-md-6">
+		<div>
+			<button type="button" style="padding: 10px; margin-bottom: 10px;" onclick="checkForErrors()">Check if form valid</button>
+		</div>
+		<div class="alert alert-danger form-validity-msg" style="display: none;">Form is not valid</div>
+		<div class="alert alert-success form-validity-msg" style="display: none;">Form is indeed valid</div>
+
 		<table id="custom-event-box" class="table table-condensed">
 			<thead>
 				<tr>
@@ -55,6 +61,10 @@
         }).onEvent(function (ev, old, newVal) {
             <strong>$(&quot;#custom-event-box tbody&quot;).append(&#39;&lt;tr&gt;&lt;td&gt;&#39; + ev + &#39;&lt;/td&gt;&lt;td&gt;&#39; + old + &#39;&lt;/td&gt;&lt;td&gt;&#39; + newVal + &#39;&lt;/td&gt;&lt;/tr&gt;&#39;);</strong>
         });</pre>
+</div>
+<p>To check if form is valid at any given time, use this code:</p>
+<div>
+	<pre>var hasErrors = flexFieldsInstance.hasErrors()</pre>
 </div>
 
 @section Scripts {
@@ -114,5 +124,15 @@
         function showSplititForm(){
             flexFieldsInstance.toggle();
         }
+
+        function checkForErrors() {
+            $(".form-validity-msg").hide();
+
+            if (flexFieldsInstance.hasErrors()) {
+                $(".form-validity-msg.alert-danger").show();
+            } else {
+				$(".form-validity-msg.alert-success").show();
+			}
+		}
     </script>
 }
