@@ -9,18 +9,18 @@
     <button type="button" style="padding: 10px; margin-bottom: 10px;" onclick="flexFieldsInstance.toggle()">Choose Splitit Payment Option</button>
 </div>
 
-<div class="splitit-default-ui grouped" id="splitit-card-data">
+<div class="splitit-design-classic" id="splitit-card-data">
     <div class="splitit-cc-group">
-        <div id="card-number"></div>
-        <div id="expiration-date"></div>
-        <div id="cvv"></div>
+        <div id="splitit-card-number"></div>
+        <div id="splitit-expiration-date"></div>
+        <div id="splitit-cvv"></div>
         <div class="splitit-cc-group-separator"></div>
     </div>
 
-    <div id="installment-picker"></div>
-    <div id="error-box"></div>
-    <div id="terms-conditions"></div>
-    <button id="btn-pay"></button>
+    <div id="splitit-installment-picker"></div>
+    <div id="splitit-error-box"></div>
+    <div id="splitit-terms-conditions"></div>
+    <button id="splitit-btn-pay"></button>
 </div>
 
 @section Scripts {
@@ -32,26 +32,26 @@
             container: '#splitit-card-data',
             fields: {
                 number: {
-                    selector: "#card-number"
+					selector: "#splitit-card-number"
                 },
                 cvv: {
-                    selector: "#cvv"
+					selector: "#splitit-cvv"
                 },
                 expirationDate: {
-                    selector: "#expiration-date"
+					selector: "#splitit-expiration-date"
                 }
             },
             installmentPicker: {
-                selector: "#installment-picker"
+				selector: "#splitit-installment-picker"
             },
             termsConditions: {
-                selector: "#terms-conditions"
+				selector: "#splitit-terms-conditions"
             },
             errorBox: {
-                selector: "#error-box"
+				selector: "#splitit-error-box"
             },
             paymentButton: {
-                selector: "#btn-pay"
+				selector: "#splitit-btn-pay"
             }
         }).ready(function () {
             var splititFlexFields = this;
