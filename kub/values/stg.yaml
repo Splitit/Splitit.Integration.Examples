@@ -9,16 +9,6 @@ hpa:
   minReplicas: 2
   maxReplicas: 3
 
-ingress:
-  enabled: true
-  type: internal
-  rules:
-  - hosts:
-    - examples.stg.splitit.com
-    paths:
-    - /*
-    port: https
-
 istio:
   hosts:
   - examples.stg.splitit.com
