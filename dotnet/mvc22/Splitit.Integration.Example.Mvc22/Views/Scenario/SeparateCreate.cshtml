@@ -1,0 +1,117 @@
+﻿@model CommonTestModel
+@{
+    ViewData["Title"] = "Flex Fields - Basic flow";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div>
+    <button type="button" style="padding: 10px; margin-bottom: 10px;" onclick="flexFieldsInstance.toggle()">Choose Splitit Payment Option</button>
+</div>
+
+<div class="splitit-design-classic" id="splitit-card-data">
+	<div class="splitit-cc-group">
+		<div id="splitit-cardholder-name"></div>
+		<div id="splitit-card-number"></div>
+		<div id="splitit-expiration-date"></div>
+		<div id="splitit-cvv"></div>
+		<div class="splitit-cc-group-separator"></div>
+	</div>
+
+    <div id="splitit-installment-picker"></div>
+    <div id="splitit-error-box"></div>
+    <div id="splitit-terms-conditions"></div>
+</div>
+
+<div style="padding: 10px; margin-top: 10px;">
+    <button type="button" style="padding: 10px; margin-bottom: 10px;" onclick="ajaxCreate()">Call Create With Ajax</button>
+</div>
+
+@section Scripts {
+	<script>
+        var flexFieldsInstance = Splitit.FlexFields.setup({
+            debug: true,
+            culture: '@Model.Culture',
+            publicToken: '@Model.PublicToken',
+            container: '#splitit-card-data',
+            fields: {
+				cardholderName: {
+					selector: "#splitit-cardholder-name"
+				},
+                number: {
+					selector: "#splitit-card-number"
+                },
+                cvv: {
+					selector: "#splitit-cvv"
+                },
+                expirationDate: {
+					selector: "#splitit-expiration-date"
+                }
+            },
+            installmentPicker: {
+				selector: "#splitit-installment-picker"
+            },
+            termsConditions: {
+				selector: "#splitit-terms-conditions"
+            },
+            errorBox: {
+				selector: "#splitit-error-box"
+            }
+        }).ready(function () {
+            var splititFlexFields = this;
+
+            splititFlexFields.updateDetails({
+                billingAddress: {
+                    AddressLine: "260 Madison Avenue.",
+                    AddressLine2: "Appartment 1",
+                    City: "New York",
+                    State: "NY",
+                    Country: "USA",
+                    Zip: "10016"
+                },
+                consumerData: {
+                    FullName: "John Smith",
+                    Email: "JohnS@splitit.com",
+                    PhoneNumber: "1-844-775-4848",
+                    CultureName: "en-us"
+                }
+            });
+        }).onSuccess(function (result) {
+            // Respond here if everything goes well.
+            alert('Payment was successful! Check console for result details.');
+            console.log(result);
+        });
+
+        function showSplititForm(){
+            flexFieldsInstance.toggle();
+        }
+
+        function ajaxCreate() {
+            if (flexFieldsInstance.hasErrors()) {
+                alert('Remove the errors first.');
+                return;
+            }
+
+            var planNumber = flexFieldsInstance.getSessionParams().planNumber;
+			var publicToken = flexFieldsInstance.getSessionParams().publicToken;
+
+            $.ajax({
+                url: '@Url.Action("AjaxCreate", "Scenario")',
+                method: "post",
+                data: {
+                    __RequestVerificationToken: $('@Html.AntiForgeryToken()').val(),
+                    planNumber: planNumber,
+					publicToken: publicToken
+                },
+                success: function (data) {
+                    flexFieldsInstance.redirect3ds1({
+                        installmentPlan: {
+                            installmentPlanNumber: planNumber,
+                            refOrderNumber: "19829-MOCK"
+						}
+                    });
+                }
+            });
+		}
+	</script>
+}

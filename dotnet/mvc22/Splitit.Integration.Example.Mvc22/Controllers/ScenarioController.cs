@@ -237,5 +237,53 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
                 Picker = picker
             });
         }
+
+        public IActionResult SeparateCreate(int options = 5, decimal amount = 500, string currency = "USD", string culture = "en-US")
+        {
+            return View(new CommonTestModel()
+            {
+                PublicToken = FlexFields.Authenticate(this.FlexFieldsEnv, SplititApiUsername, SplititApiPassword)
+                    .AddInstallments(Enumerable.Range(1, options).ToList())
+                    .Add3DSecure(null)
+                    .GetPublicToken(amount, currency),
+                Currency = currency,
+                Culture = culture
+            });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AjaxCreate(string planNumber, string publicToken)
+        {
+            var installmentPlanApi = new InstallmentPlanApi(this.FlexFieldsEnv, sessionId: publicToken);
+            this.FlexFieldsEnv.SetTouchPoint(new TouchPoint() { Code = "FlexFields" });
+
+            try
+            {
+                var createResponse = await installmentPlanApi.InstallmentPlanCreateAsync(new CreateInstallmentPlanRequest()
+                {
+                    InstallmentPlanNumber = planNumber,
+                    CreditCardDetails = new CardData()
+                    {
+                        CardHolderFullName = "3DS_V2_CHALLENGE_VALID_ERROR",
+                        CardNumber = "4111111111111111",
+                        CardExpMonth = "02",
+                        CardExpYear = "22",
+                        CardCvv = "222"
+                    },
+                    PlanApprovalEvidence = new PlanApprovalEvidence(areTermsAndConditionsApproved: true)
+                });
+
+                return Json(createResponse);
+            }
+            catch(SplititApiException ex)
+            {
+                return Json(new { require3ds = (ex.Code == "641") });
+            }
+            finally
+            {
+                this.FlexFieldsEnv.SetTouchPoint(null);
+            }
+        }
+
     }
 }
