@@ -39,11 +39,11 @@
 		<div class="form-group">
 			<label>Currency:</label>
 			<input type="text" class="form-control" placeholder="Currency, ex: USD" name="currency" value="@Model.Currency" readonly>
-            <small class="form-text text-muted">Currency cannot be changed later.</small>
+			<small class="form-text text-muted">Currency cannot be changed later.</small>
 		</div>
 		<button class="btn btn-danger" type="button" onclick="setNewAmount(this)">Set new amount</button>
 
-        <script type="text/javascript">
+		<script type="text/javascript">
             function setNewAmount(btn) {
                 var newAmount = parseFloat($(btn).closest('.new-amount-form-wrapper').find('#newAmount').val());
                 var currency = '@Model.Currency';
@@ -60,12 +60,28 @@
                     success: function (data) {
                         console.log('Call to AJAX set currency result:');
                         console.log(data);
-                        
+
                         flexFieldsInstance.synchronizePlan();
                     }
                 });
 			}
-        </script>
+		</script>
+
+		<h2>Update ref order number</h2>
+		<div class="form-group">
+			<label>New ref order number:</label>
+			<input type="text" class="form-control" placeholder="New ref order number" id="newRefOrderNum">
+		</div>
+		<button class="btn btn-info" type="button" onclick="setNewRefOrderNum(this)">Set new ref order number</button>
+
+		<script type="text/javascript">
+			function setNewRefOrderNum(btn) {
+				var newRefOrderNum = $(btn).closest('.new-amount-form-wrapper').find('#newRefOrderNum').val();
+                flexFieldsInstance.updateDetails({
+                    refOrderNumber: newRefOrderNum
+                });
+			}
+		</script>
 	</div>
 </div>
 
@@ -81,9 +97,15 @@
 });
 
 function planAmountUpdatedOnMerchantSite(){
-    <strong>flexFieldsInstance.synchronizePlan();</strong>
+			<strong>flexFieldsInstance.synchronizePlan();</strong>
 }</pre>
 		</div>
+		<p>To update ref order number, use the following snippet</p>
+		<pre>function planAmountUpdatedOnMerchantSite(){
+    <strong>flexFieldsInstance.updateDetails({
+	    refOrderNumber: newRefOrderNum
+	});</strong>
+}</pre>
 	</div>
 </div>
 

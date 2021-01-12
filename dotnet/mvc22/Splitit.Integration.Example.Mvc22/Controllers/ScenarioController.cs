@@ -38,6 +38,45 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
             });
         }
 
+        public async Task<IActionResult> No3ds(int options = 5, decimal amount = 500, string currency = "USD")
+        {
+            var loginApi = new LoginApi(this.FlexFieldsEnv);
+            var request = new LoginRequest(userName: SplititApiUsername, password: SplititApiPassword);
+
+            var loginResult = await loginApi.LoginPostAsync(request);
+
+            var installmentPlanApi = new InstallmentPlanApi(this.FlexFieldsEnv, sessionId: loginResult.SessionId);
+            var initResponse = installmentPlanApi.InstallmentPlanInitiate(new InitiateInstallmentPlanRequest()
+            {
+                PlanData = new PlanData(
+                    amount: new MoneyWithCurrencyCode(amount, currency),
+                    numberOfInstallments: options / 2,
+                    attempt3DSecure: false,
+                    autoCapture: true),
+                BillingAddress = new AddressData()
+                {
+                    AddressLine = "J. Street 23",
+                    City = "Birmingham",
+                    Country = "GB",
+                    Zip = "48993"
+                },
+                ConsumerData = new ConsumerData()
+                {
+                    Email = "john+" + DateTime.Now.Millisecond + "@gmail.com" // since john grabbed the @gmail, let him get some spam now and then :D
+                },
+                PaymentWizardData = new PaymentWizardData()
+                {
+                    RequestedNumberOfInstallments = string.Join(",", Enumerable.Range(1, options))
+                }
+            });
+
+            return View(new CommonTestModel()
+            {
+                PublicToken = initResponse.PublicToken,
+                CheckoutUrl = initResponse.CheckoutUrl
+            });
+        }
+
         public IActionResult ClientConfig(int options = 5, decimal amount = 500, string currency = "USD")
         {
             return View(new CommonTestModel()
