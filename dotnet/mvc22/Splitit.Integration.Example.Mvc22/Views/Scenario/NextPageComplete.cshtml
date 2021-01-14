@@ -1,0 +1,30 @@
+﻿@model CommonTestModel
+@{
+    ViewData["Title"] = "Flex Fields - Basic flow";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div>
+    <button type="button" style="padding: 10px; margin-bottom: 10px;" onclick="completePayment()">Complete Payment</button>
+</div>
+
+
+
+@section Scripts {
+	<script>
+        function completePayment() {
+			Splitit.FlexFields.completeCheckout({
+                publicToken: '@Model.PublicToken',
+                planNumber: '@Model.PlanNumber'
+            }).onSuccess(function (data) {
+				console.log(data);
+			    alert('Payment was successful! Check console for result details.');
+            }).onError(function (err) {
+                console.log(err);
+                alert('Error. Check console for details.');
+            });
+		}
+
+	</script>
+}

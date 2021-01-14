@@ -276,5 +276,14 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
                 Picker = picker
             });
         }
+
+        public async Task<IActionResult> NextPageComplete(string publicToken, string planNumber)
+        {
+            return View(new CommonTestModel()
+            {
+                PublicToken = publicToken,
+                PlanNumber = planNumber
+            });
+        }
     }
 }
