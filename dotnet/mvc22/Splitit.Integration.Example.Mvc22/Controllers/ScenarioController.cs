@@ -277,8 +277,63 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
             });
         }
 
-        public async Task<IActionResult> NextPageComplete(string publicToken, string planNumber)
+        public IActionResult MultiPage(int options = 5, decimal amount = 500, string currency = "USD", string culture = "en-US")
         {
+            return View(new CommonTestModel()
+            {
+                PublicToken = FlexFields.Authenticate(this.FlexFieldsEnv, SplititApiUsername, SplititApiPassword)
+                    .AddInstallments(Enumerable.Range(1, options).ToList())
+                    .GetPublicToken(amount, currency),
+                Culture = culture
+            });
+        }
+
+        public async Task<IActionResult> NextPageComplete(string publicToken, string planNumber, bool performCreate = false)
+        {
+            ViewBag.CreateCalledServerSide = false;
+            ViewBag.CreateCompleted = false;
+            ViewBag.CreateError = null;
+
+            if (performCreate)
+            {
+                var installmentPlanApi = new InstallmentPlanApi(this.FlexFieldsEnv, sessionId: publicToken);
+                this.FlexFieldsEnv.SetTouchPoint(new TouchPoint() { Code = "FlexFields" });
+
+                try
+                {
+                    var createResponse = await installmentPlanApi.InstallmentPlanCreateAsync(new CreateInstallmentPlanRequest()
+                    {
+                        InstallmentPlanNumber = planNumber,
+                        CreditCardDetails = new CardData()
+                        {
+                            CardHolderFullName = "3DS_V2_CHALLENGE_VALID_ERROR",
+                            CardNumber = "4111111111111111",
+                            CardExpMonth = "02",
+                            CardExpYear = "22",
+                            CardCvv = "222"
+                        },
+                        PlanApprovalEvidence = new PlanApprovalEvidence(areTermsAndConditionsApproved: true)
+                    });
+
+                    ViewBag.CreateCompleted = true;
+                }
+                catch (SplititApiException ex)
+                {
+                    if (ex.Code == "641")
+                    {
+                        ViewBag.CreateCalledServerSide = true;
+                    }
+                    else
+                    {
+                        ViewBag.CreateError = ex.Code + ":" + ex.AdditionalInfo;
+                    }
+                }
+                finally
+                {
+                    this.FlexFieldsEnv.SetTouchPoint(null);
+                }
+            }
+
             return View(new CommonTestModel()
             {
                 PublicToken = publicToken,

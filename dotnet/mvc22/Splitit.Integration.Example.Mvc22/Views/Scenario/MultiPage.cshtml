@@ -20,7 +20,14 @@
     <div id="splitit-installment-picker"></div>
     <div id="splitit-error-box"></div>
     <div id="splitit-terms-conditions"></div>
-    <button id="splitit-btn-pay"></button>
+</div>
+<div style="padding: 10px; margin-top: 10px;">
+	<ul>
+		<li>Option 1: <a href="javascript:void(0)" onclick="completeOnNextPage(this, false)">Complete flow on next page</a> </li>
+		<li>Option 2: <a href="javascript:void(0)" onclick="completeOnNextPage(this, true)">Complete flow on next page with server side create</a> </li>
+	</ul>
+    
+    <div id="next-page-error-box"></div>
 </div>
 
 @section Scripts {
@@ -49,9 +56,6 @@
             },
             errorBox: {
 				selector: "#splitit-error-box"
-            },
-            paymentButton: {
-				selector: "#splitit-btn-pay"
             }
         }).ready(function () {
             var splititFlexFields = this;
@@ -81,5 +85,15 @@
         function showSplititForm(){
             flexFieldsInstance.toggle();
         }
+
+        function completeOnNextPage(sender, performCreate) {
+            if (!flexFieldsInstance.hasErrors()) {
+                var sessionData = flexFieldsInstance.getSessionParams();
+                window.location.href = '@Url.Action("NextPageComplete")?publicToken=' + sessionData.publicToken + '&planNumber=' + sessionData.planNumber + '&performCreate=' + performCreate;
+            } else {
+                $("#next-page-error-box").text('There are some errors on the form still.');
+                setTimeout(function () { $("#next-page-error-box").text(''); }, 2500);
+			}
+		}
 	</script>
 }

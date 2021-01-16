@@ -1,22 +1,35 @@
 ﻿@model CommonTestModel
 @{
-    ViewData["Title"] = "Flex Fields - Basic flow";
+	ViewData["Title"] = "Flex Fields - Basic flow";
 }
 
 <h1>@ViewData["Title"]</h1>
 
-<div>
-    <button type="button" style="padding: 10px; margin-bottom: 10px;" onclick="completePayment()">Complete Payment</button>
-</div>
-
-
+@if (ViewBag.CreateCompleted)
+{
+	<div class="alert alert-success">Create completed without need for 3DS</div>
+}
+else if (ViewBag.CreateError != null)
+{
+	<div class="alert alert-danger">Create completed with errors</div>
+	<div>
+		@ViewBag.CreateError
+	</div>
+}
+else
+{
+	<div>
+		<button type="button" style="padding: 10px; margin-bottom: 10px;" onclick="completePayment()">Complete Payment</button>
+	</div>
+}
 
 @section Scripts {
 	<script>
         function completePayment() {
 			Splitit.FlexFields.completeCheckout({
                 publicToken: '@Model.PublicToken',
-                planNumber: '@Model.PlanNumber'
+                planNumber: '@Model.PlanNumber',
+				skipCallingCreate: @(ViewBag.CreateCalledServerSide == true ? "true" : "false")
             }).onSuccess(function (data) {
 				console.log(data);
 			    alert('Payment was successful! Check console for result details.');
