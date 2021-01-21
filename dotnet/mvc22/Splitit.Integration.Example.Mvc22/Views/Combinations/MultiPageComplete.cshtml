@@ -1,0 +1,75 @@
+﻿@model CommonTestModel
+@{
+	ViewData["Title"] = "Flex Fields - Complete multi page flow";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="row">
+	<div class="col-md-6">
+		<div style="padding: 10px;">
+			<button type="button" class="btn btn-default" onclick="performAjaxCreate(this)">AJAX Create</button>
+		</div>
+		<div style="padding: 10px;">
+			<button type="button" id="complete-payment-button" class="btn btn-default" onclick="completePayment(this)">Complete Payment</button>
+		</div>
+	</div>
+	<div class="col-md-6">
+		<div id="outputTitle"></div>
+		<pre style="width: 100%; height: 400px; overflow: scroll;"><code id="outputBox"></code></pre>
+	</div>
+</div>
+
+@section Scripts {
+	<script>
+		function setOutputTitle(type, text) {
+			$("#outputTitle").removeClass("alert-warning").removeClass("alert-danger").removeClass("alert-success");
+			$("#outputTitle").addClass("alert alert-" + type);
+			$("#outputTitle").text(text);
+		}
+
+		var _createCalled = false;
+		function performAjaxCreate(sender) {
+			$(sender).attr('disabled', 'disabled');
+			$("#complete-payment-button").attr('disabled', 'disabled');
+			_createCalled = true;
+
+			$.ajax({
+				url: '@Html.Raw(Url.Action("AjaxCreate", new { planNumber = Model.PlanNumber, publicToken = Model.PublicToken }))',
+				method: "POST",
+				success: function (data) {
+					if (data.success) {
+						if (data.require3d) {
+							$("#complete-payment-button").removeAttr('disabled');
+							setOutputTitle("warning", "3D required. Click 'Complete Payment' to complete flow.");
+						} else {
+							setOutputTitle("success", "3D not required, flow completed.");
+						}
+					} else {
+						setOutputTitle("danger", "Unexpected error during AJAX create.");
+						$("#outputBox").text(JSON.stringify(data, null, 4));
+					}
+				}
+			})
+		}
+
+		function completePayment(sender) {
+			$(sender).attr('disabled', 'disabled');
+
+			Splitit.FlexFields.completeCheckout({
+                publicToken: '@Model.PublicToken',
+                planNumber: '@Model.PlanNumber',
+				skipCallingCreate: _createCalled
+			}).onSuccess(function (data) {
+				setOutputTitle("success", "completeCheckout.onSuccess invoked");
+				$("#outputBox").text(JSON.stringify(data, null, 4));
+				$(sender).removeAttr('disabled');
+			}).onError(function (err) {
+				setOutputTitle("danger", "completeCheckout.onError invoked");
+				$("#outputBox").text(JSON.stringify(err, null, 4));
+				$(sender).removeAttr('disabled');
+            });
+		}
+
+	</script>
+}

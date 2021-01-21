@@ -1,0 +1,8 @@
+﻿@using Microsoft.Extensions.Configuration
+@inject CredentialSource CredentialSource
+
+@{
+    ViewBag.FlexFieldsUrlRoot = CredentialSource.FlexFieldsUrlRoot;
+    ViewBag.UpstreamUrlRoot = CredentialSource.UpstreamUrlRoot;
+    Layout = "_LayoutCombinations";
+}
