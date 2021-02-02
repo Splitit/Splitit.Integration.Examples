@@ -47,6 +47,7 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
                     amount: new MoneyWithCurrencyCode(amount, currency),
                     numberOfInstallments: options / 2,
                     attempt3DSecure: attempt3DSecure,
+                    refOrderNumber: "r-" + DateTime.Now.Ticks.ToString(),
                     autoCapture: true),
                 BillingAddress = new AddressData()
                 {
@@ -57,6 +58,7 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
                 },
                 ConsumerData = new ConsumerData()
                 {
+                    FullName = "Ivan Cesar Second",
                     CultureName = culture,
                     Email = "john+" + DateTime.Now.Millisecond + "@gmail.com" // since john grabbed the @gmail, let him get some spam now and then :D
                 },
@@ -98,14 +100,6 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
                 var createResponse = await installmentPlanApi.InstallmentPlanCreateAsync(new CreateInstallmentPlanRequest()
                 {
                     InstallmentPlanNumber = planNumber,
-                    CreditCardDetails = new CardData()
-                    {
-                        CardHolderFullName = "3DS_V2_CHALLENGE_VALID_ERROR",
-                        CardNumber = "4111111111111111",
-                        CardExpMonth = "02",
-                        CardExpYear = "22",
-                        CardCvv = "222"
-                    },
                     PlanApprovalEvidence = new PlanApprovalEvidence(areTermsAndConditionsApproved: true)
                 });
 

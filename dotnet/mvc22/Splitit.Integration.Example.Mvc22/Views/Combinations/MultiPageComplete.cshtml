@@ -56,7 +56,7 @@
 		function completePayment(sender) {
 			$(sender).attr('disabled', 'disabled');
 
-			Splitit.FlexFields.completeCheckout({
+			var checkoutInstance = Splitit.FlexFields.completeCheckout({
                 publicToken: '@Model.PublicToken',
                 planNumber: '@Model.PlanNumber',
 				skipCallingCreate: _createCalled
