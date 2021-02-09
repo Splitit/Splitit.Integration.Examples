@@ -1,0 +1,138 @@
+﻿@model CommonTestModel
+@{
+    ViewData["Title"] = "Flex Fields V2 - Single Page Flow";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="row">
+	<div class="col-md-6">
+		<div class="splitit-design-classic" id="splitit-card-data">
+			<div class="splitit-cc-group">
+				<div id="splitit-cardholder-name"></div>
+				<div id="splitit-card-number"></div>
+				<div id="splitit-expiration-date"></div>
+				<div id="splitit-cvv"></div>
+				<div class="splitit-cc-group-separator"></div>
+			</div>
+
+			<div id="splitit-installment-picker"></div>
+			<div id="splitit-error-box"></div>
+			<div id="splitit-terms-conditions"></div>
+			<button id="splitit-btn-pay"></button>
+		</div>
+		<div style="padding: 10px;">
+			<button type="button" class="btn btn-default" onclick="performAjaxCreate(this)">AJAX Create</button>
+		</div>
+	</div>
+	<div class="col-md-6">
+		<div id="outputTitle"></div>
+		<pre style="width: 100%; height: 400px; overflow: scroll;"><code id="outputBox" ></code></pre>
+	</div>
+</div>
+
+@section Scripts {
+	<script>
+		function setOutputTitle(type, text) {
+			$("#outputTitle").removeClass("alert-warning").removeClass("alert-danger").removeClass("alert-success");
+			$("#outputTitle").addClass("alert alert-" + type);
+			$("#outputTitle").text(text);
+		}
+
+        var flexFieldsInstance = Splitit.FlexFields.setup({
+            debug: true,
+            culture: '@Model.Culture',
+            publicToken: '@Model.PublicToken',
+            container: '#splitit-card-data',
+            fields: {
+				cardholderName: {
+					selector: "#splitit-cardholder-name"
+				},
+                number: {
+					selector: "#splitit-card-number"
+                },
+                cvv: {
+					selector: "#splitit-cvv"
+                },
+                expirationDate: {
+					selector: "#splitit-expiration-date"
+                }
+            },
+            installmentPicker: {
+				selector: "#splitit-installment-picker"
+            },
+            termsConditions: {
+				selector: "#splitit-terms-conditions"
+            },
+            errorBox: {
+				selector: "#splitit-error-box"
+			},
+			paymentButton: {
+				selector: "#splitit-btn-pay",
+				ui: {
+					size: "large" // small
+				}
+			}
+        }).ready(function () {
+            var splititFlexFields = this;
+
+            splititFlexFields.updateDetails({
+                billingAddress: {
+                    AddressLine: "260 Madison Avenue.",
+                    AddressLine2: "Appartment 1",
+                    City: "New York",
+                    State: "NY",
+                    Country: "USA",
+                    Zip: "10016"
+                },
+                consumerData: {
+                    FullName: "John Smith",
+                    Email: "JohnS@splitit.com",
+                    PhoneNumber: "1-844-775-4848",
+                    CultureName: "en-us"
+                }
+            });
+
+			splititFlexFields.show();
+		}).onSuccess(function (result) {
+			setOutputTitle("success", "FF.onSuccess invoked");
+			$("#outputBox").text(JSON.stringify(result, null, 4));
+		}).onError(function (result) {
+			if (result.filter(e => e.showError).length > 0) {
+				setOutputTitle("danger", "FF.onError invoked at " + new Date().toTimeString());
+				$("#outputBox").text(JSON.stringify(result, null, 4));
+			} else {
+				setOutputTitle("", "");
+				$("#outputBox").text("");
+			}
+		});
+
+		function performAjaxCreate(sender) {
+			if (flexFieldsInstance.hasErrors()) {
+				alert('Payment fields not validated entirely yet.');
+				return;
+			} 
+
+			$(sender).attr('disabled', 'disabled');
+			$("#complete-payment-button").attr('disabled', 'disabled');
+
+			$.ajax({
+				url: '@Html.Raw(Url.Action("AjaxCreate", new { planNumber = Model.PlanNumber, publicToken = Model.PublicToken }))',
+				method: "POST",
+				success: function (data) {
+					if (data.success) {
+						if (data.require3d) {
+							flexFieldsInstance.redirect3ds({ customDataPassedByIntegrator: { some: 'value' } });
+							setOutputTitle("warning", "3D required. Starting automatically...");
+						} else {
+							setOutputTitle("success", "3D not required, flow completed with AJAX create.");
+						}
+					} else {
+						setOutputTitle("danger", "Unexpected error during AJAX create.");
+						$("#outputBox").text(JSON.stringify(data, null, 4));
+					}
+				}
+			})
+		}
+	</script>
+}

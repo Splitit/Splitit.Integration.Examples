@@ -1,0 +1,94 @@
+﻿@model CommonTestModel
+@{
+    ViewData["Title"] = "Flex Fields V2 - Multi Page Flow";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="row">
+	<div class="col-md-6">
+		<div class="splitit-design-classic" id="splitit-card-data">
+			<div class="splitit-cc-group">
+				<div id="splitit-cardholder-name"></div>
+				<div id="splitit-card-number"></div>
+				<div id="splitit-expiration-date"></div>
+				<div id="splitit-cvv"></div>
+				<div class="splitit-cc-group-separator"></div>
+			</div>
+
+			<div id="splitit-installment-picker"></div>
+			<div id="splitit-error-box"></div>
+			<div id="splitit-terms-conditions"></div>
+		</div>
+		<div style="padding: 10px">
+			<a href="javascript:void(0)" data-url="@Url.Action("NextPage", new { planNumber = Model.PlanNumber, publicToken = Model.PublicToken })"
+			   class="btn btn-primary" onclick="completeFlow(this)">Complete flow on next page</a>
+		</div>
+		<div id="next-page-error-box" class="alert alert-danger"></div>
+	</div>
+</div>
+
+@section Scripts {
+	<script>
+        var flexFieldsInstance = Splitit.FlexFields.setup({
+            debug: true,
+            culture: '@Model.Culture',
+            publicToken: '@Model.PublicToken',
+            container: '#splitit-card-data',
+            fields: {
+				cardholderName: {
+					selector: "#splitit-cardholder-name"
+				},
+                number: {
+					selector: "#splitit-card-number"
+                },
+                cvv: {
+					selector: "#splitit-cvv"
+                },
+                expirationDate: {
+					selector: "#splitit-expiration-date"
+                }
+            },
+            installmentPicker: {
+				selector: "#splitit-installment-picker"
+            },
+            termsConditions: {
+				selector: "#splitit-terms-conditions"
+            },
+            errorBox: {
+				selector: "#splitit-error-box"
+			}
+        }).ready(function () {
+            var splititFlexFields = this;
+
+            splititFlexFields.updateDetails({
+                billingAddress: {
+                    AddressLine: "260 Madison Avenue.",
+                    AddressLine2: "Appartment 1",
+                    City: "New York",
+                    State: "NY",
+                    Country: "USA",
+                    Zip: "10016"
+                },
+                consumerData: {
+                    FullName: "John Smith",
+                    Email: "JohnS@splitit.com",
+                    PhoneNumber: "1-844-775-4848",
+                    CultureName: "en-us"
+                }
+            });
+
+			splititFlexFields.show();
+        });
+
+		function completeFlow(sender) {
+            if (!flexFieldsInstance.hasErrors()) {
+                var url = $(sender).data('url');
+                window.location.href = url;
+            } else {
+                $("#next-page-error-box").text('There are some errors on the form still.').show();
+                setTimeout(function () { $("#next-page-error-box").text('').hide(); }, 2500);
+			}
+		}
+	</script>
+}
