@@ -79,6 +79,8 @@
 				var newRefOrderNum = $(btn).closest('.new-amount-form-wrapper').find('#newRefOrderNum').val();
                 flexFieldsInstance.updateDetails({
                     refOrderNumber: newRefOrderNum
+                }, function () {
+                    console.log('Update details call completed.');
                 });
 			}
 		</script>
