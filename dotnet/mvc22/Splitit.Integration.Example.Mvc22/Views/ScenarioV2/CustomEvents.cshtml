@@ -57,12 +57,12 @@
         }).onSuccess(function (result) {
             ...
         }).onEvent(function (ev, old, newVal) {
-            <strong>$(&quot;#custom-event-box tbody&quot;).append(&#39;&lt;tr&gt;&lt;td&gt;&#39; + ev + &#39;&lt;/td&gt;&lt;td&gt;&#39; + old + &#39;&lt;/td&gt;&lt;td&gt;&#39; + newVal + &#39;&lt;/td&gt;&lt;/tr&gt;&#39;);</strong>
+		    <strong>$(&quot;#custom-event-box tbody&quot;).append(&#39;&lt;tr&gt;&lt;td&gt;&#39; + ev.component + &#39;:&#39; + ev.evType + &#39;&lt;/td&gt;&lt;td&gt;&#39; + ev.oldValue + &#39;&lt;/td&gt;&lt;td&gt;&#39; + ev.newValue + &#39;&lt;/td&gt;&lt;/tr&gt;&#39;);</strong>
         });</pre>
 </div>
 <p>To check if form is valid at any given time, use this code:</p>
 <div>
-	<pre>var hasErrors = flexFieldsInstance.hasErrors()</pre>
+	<pre>var isValid = flexFieldsInstance.getState().validationStatus.isValid;</pre>
 </div>
 
 @section Scripts {
@@ -115,8 +115,8 @@
             // Respond here if everything goes well.
             alert('Payment was successful! Check console for result details.');
             console.log(result);
-        }).onEvent(function (ev, old, newVal) {
-            $("#custom-event-box tbody").append('<tr><td>' + ev + '</td><td>' + old + '</td><td>' + newVal + '</td></tr>');
+        }).onEvent(function (ev) {
+            $("#custom-event-box tbody").append('<tr><td>' + ev.component + ':' + ev.evType + '</td><td>' + ev.oldValue + '</td><td>' + ev.newValue + '</td></tr>');
         });
 
         function showSplititForm(){
@@ -126,7 +126,9 @@
         function checkForErrors() {
             $(".form-validity-msg").hide();
 
-            if (flexFieldsInstance.hasErrors()) {
+            var isValid = flexFieldsInstance.getState().validationStatus.isValid;
+
+            if (!isValid) {
                 $(".form-validity-msg.alert-danger").show();
             } else {
 				$(".form-validity-msg.alert-success").show();

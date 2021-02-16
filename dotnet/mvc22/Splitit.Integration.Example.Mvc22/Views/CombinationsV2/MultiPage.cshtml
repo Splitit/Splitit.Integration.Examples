@@ -82,7 +82,7 @@
         });
 
 		function completeFlow(sender) {
-            if (!flexFieldsInstance.hasErrors()) {
+            if (flexFieldsInstance.getState().validationStatus.isValid) {
                 var url = $(sender).data('url');
                 window.location.href = url;
             } else {

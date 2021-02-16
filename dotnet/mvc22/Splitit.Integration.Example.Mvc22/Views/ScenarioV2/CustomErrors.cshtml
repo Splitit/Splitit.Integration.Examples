@@ -88,10 +88,10 @@
         }).onError(function (data) {
             console.log(data);
             $("#custom-error-box").children().remove();
-            $(data).each((idx, el) => {
+            $(data.errors).each((idx, el) => {
                 if (el.showError) {
 					var fields = el.fieldTypes.join(',');
-					$("#custom-error-box").append(`<li>[${el.code || 'client'}] Fields: ${fields}, Error: ${el.error}</li>`);
+					$("#custom-error-box").append(`<li>[${el.code}] Fields: ${fields}, Error: ${el.description}</li>`);
 				}
             });
 			

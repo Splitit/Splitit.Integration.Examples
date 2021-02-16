@@ -73,7 +73,7 @@
 		<script src="~/js/site.min.js" asp-append-version="true"></script>
 	</environment>
 
-	<script src="@ViewBag.FlexFieldsV2UrlRoot/splitit.flex-fields.sdk.js?v=@(System.DateTime.Now.Ticks)"></script>
+	<script src="@ViewBag.FlexFieldsV2UrlRoot/splitit.flex-fields.sdk.js?v=@(System.DateTime.Now.ToShortDateString())"></script>
 
 	@RenderSection("Scripts", required: false)
 </body>

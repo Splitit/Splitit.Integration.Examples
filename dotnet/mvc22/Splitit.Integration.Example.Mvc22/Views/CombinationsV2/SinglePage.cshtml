@@ -98,7 +98,7 @@
 			setOutputTitle("success", "FF.onSuccess invoked");
 			$("#outputBox").text(JSON.stringify(result, null, 4));
 		}).onError(function (result) {
-			if (result.filter(e => e.showError).length > 0) {
+			if (result.errors.filter(e => e.showError).length > 0) {
 				setOutputTitle("danger", "FF.onError invoked at " + new Date().toTimeString());
 				$("#outputBox").text(JSON.stringify(result, null, 4));
 			} else {
@@ -108,7 +108,7 @@
 		});
 
 		function performAjaxCreate(sender) {
-			if (flexFieldsInstance.hasErrors()) {
+			if (flexFieldsInstance.getState().validationStatus.isValid) {
 				alert('Payment fields not validated entirely yet.');
 				return;
 			} 
