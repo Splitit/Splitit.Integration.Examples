@@ -24,15 +24,7 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
 
         public IActionResult Index(decimal amount = 500, int options = 5)
         {
-            return RedirectToAction("Index", "Scenario");
-            // ViewBag.Amount = amount;
-            // ViewBag.UpstreamMerchantId = SplititApiKey;
-            // ViewBag.PublicToken = FlexFields
-            //     .Authenticate(this.FlexFieldsEnv, SplititApiUsername, SplititApiPassword)
-            //     .AddInstallments(Enumerable.Range(1, options).ToList())
-            //     .GetPublicToken(amount, "USD");
-
-            //return View();
+            return RedirectToAction("Index", "ScenarioV2");
         }
 
         public IActionResult SetCredentials()
@@ -49,6 +41,7 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
             this.Response.Cookies.Append(nameof(model.SplititApiPassword), model.SplititApiPassword);
             this.Response.Cookies.Append(nameof(model.SplititApiUsername), model.SplititApiUsername);
             this.Response.Cookies.Append(nameof(model.FlexFieldsUrlRoot), model.FlexFieldsUrlRoot);
+            this.Response.Cookies.Append(nameof(model.FlexFieldsV2UrlRoot), model.FlexFieldsV2UrlRoot);
             this.Response.Cookies.Append(nameof(model.PaymentFormEmbedderUrlRoot), model.PaymentFormEmbedderUrlRoot);
             this.Response.Cookies.Append(nameof(model.UpstreamUrlRoot), model.UpstreamUrlRoot);
 
@@ -67,6 +60,7 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
             this.Response.Cookies.Delete(nameof(SetCredentialsModel.SplititApiUsername));
             this.Response.Cookies.Delete(nameof(SetCredentialsModel.PaymentFormEmbedderUrlRoot));
             this.Response.Cookies.Delete(nameof(SetCredentialsModel.FlexFieldsUrlRoot));
+            this.Response.Cookies.Delete(nameof(SetCredentialsModel.FlexFieldsV2UrlRoot));
             this.Response.Cookies.Delete(nameof(SetCredentialsModel.UpstreamUrlRoot));
 
             this.TempData["show-success"] = true;
@@ -92,48 +86,6 @@ namespace Splitit.Integration.Example.Mvc21.Controllers
                 .GetPublicToken(amount, "USD");
 
             return View(model);
-
-            //var billingAddress = new AddressData();
-            //var consumerModel = new ConsumerData(isLocked: false, isDataRestricted: false);
-
-            //await this.TryUpdateModelAsync(billingAddress, "billingAddress");
-            //await this.TryUpdateModelAsync(consumerModel, "consumerModel");
-
-            // var publicToken = FlexFields.Authenticate(this.FlexFieldsEnv, SplititApiUsername, SplititApiPassword)
-            //     .GetPublicToken(amount, "USD");
-
-            // return new JsonResult(new { publicToken });
-
-            // var loginApi = new LoginApi(this.FlexFieldsEnv);
-            // var request = new LoginRequest(userName: SplititApiUsername, password: SplititApiPassword);
-
-            // var loginResult = await loginApi.LoginPostAsync(request);
-
-            // var installmentPlanApi = new InstallmentPlanApi(this.FlexFieldsEnv, sessionId: loginResult.SessionId);
-            // var initResponse = installmentPlanApi.InstallmentPlanInitiate(new InitiateInstallmentPlanRequest()
-            // {
-            //     PlanData = new PlanData(
-            //         amount: new MoneyWithCurrencyCode(amount, "USD"), 
-            //         numberOfInstallments: numInstallments, 
-            //         attempt3DSecure: false,
-            //         strategy: null),//PlanStrategy.NonSecuredPlan),
-            //     PaymentWizardData = new PaymentWizardData(
-            //         isOpenedInIframe: false,
-            //         requestedNumberOfInstallments: string.Join(",", Enumerable.Range(1, numOptions))),
-            //     //BillingAddress = billingAddress,
-            //     //ConsumerData = consumerModel,
-            //     RedirectUrls = new RedirectUrls(
-            //         succeeded: "https://www.success.com/", 
-            //         failed: "https://www.ynet.co.il/", 
-            //         canceled: "https://www.walla.com/")
-            // });
-
-            // return new JsonResult(initResponse, new System.Text.Json.JsonSerializerOptions()
-            // {
-            //     ContractResolver = new DefaultContractResolver()
-            // });
-
-            //return new JsonResult(initResponse);
         }
     }
 }

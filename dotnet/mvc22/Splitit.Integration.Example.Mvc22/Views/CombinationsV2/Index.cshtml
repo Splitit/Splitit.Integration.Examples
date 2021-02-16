@@ -1,0 +1,58 @@
+﻿@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Splitit Flex Fields: Combinations scenario list";
+}
+
+<h1 class="display-4">@ViewData["Title"]</h1>
+<div>
+    <a asp-action="Index" asp-controller="Home">Back to Home</a>
+</div>
+<div style="margin-bottom: 20px;">
+	Upstream loads from: <a href="https://developers.splitit.com/products#main_upstream-messaging" target="_blank">@(ViewBag.UpstreamUrlRoot)/v1/integration-wiki.html</a> <br />
+	Flex Fields loads from: <a href="https://developers.splitit.com/products#main_flex-fields" target="_blank">@ViewBag.FlexFieldsV2UrlRoot</a> <br />
+</div>
+
+<div>
+	<form asp-action="ProcessCombination" method="GET" target="_blank">
+		<div class="row">
+			<div class="col-md-6">
+				<div class="form-group">
+					<label>3D Secure</label>
+					<select name="attempt3DSecure" class="form-control">
+						<option value="">Default</option>
+						<option value="true">True</option>
+						<option value="false">False</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<label>Page Flow</label>
+					<select name="pageFlow" class="form-control">
+						<option value="single-page">Single Page</option>
+						<option value="multi-page">Multi Page</option>
+					</select>
+				</div>
+				<div>
+					<input type="submit" class="btn btn-primary" value="Run Scenario" />
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="form-group">
+					<label>Options</label>
+					<input type="text" class="form-control" placeholder="Num. options" value="5" name="options">
+				</div>
+				<div class="form-group">
+					<label>Amount</label>
+					<input type="text" class="form-control" placeholder="Amount" value="400" name="amount">
+				</div>
+				<div class="form-group">
+					<label>Currency</label>
+					<input type="text" class="form-control" placeholder="Currency" value="USD" name="currency">
+				</div>
+				<div class="form-group">
+					<label>Culture</label>
+					<input type="text" class="form-control" placeholder="Culture" value="en-US" name="culture">
+				</div>
+			</div>
+		</div>
+	</form>
+</div>

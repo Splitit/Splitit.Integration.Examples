@@ -1,6 +1,6 @@
 ﻿@model CommonTestModel
 @{
-	ViewData["Title"] = "Flex Fields - Amount change";
+	ViewData["Title"] = "Flex Fields V2 - Amount change";
 }
 
 <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
@@ -47,7 +47,7 @@
             function setNewAmount(btn) {
                 var newAmount = parseFloat($(btn).closest('.new-amount-form-wrapper').find('#newAmount').val());
                 var currency = '@Model.Currency';
-				var planNumber = flexFieldsInstance.getSessionParams().planNumber;
+				var planNumber = flexFieldsInstance.getState().planNumber;
 
                 // We recommend showing custom loader over flex fields to avoid any race conditions.
 
@@ -80,7 +80,7 @@
                 flexFieldsInstance.updateDetails({
                     refOrderNumber: newRefOrderNum
                 }, function () {
-                    console.log('Update details call completed.');
+                    console.log('Update succeeded.');
                 });
 			}
 		</script>
@@ -99,14 +99,14 @@
 });
 
 function planAmountUpdatedOnMerchantSite(){
-			<strong>flexFieldsInstance.synchronizePlan();</strong>
+	<strong>flexFieldsInstance.synchronizePlan();</strong>
 }</pre>
 		</div>
 		<p>To update ref order number, use the following snippet</p>
 		<pre>function planAmountUpdatedOnMerchantSite(){
     <strong>flexFieldsInstance.updateDetails({
 	    refOrderNumber: newRefOrderNum
-	});</strong>
+	}, function(){ /* on success callback */ });</strong>
 }</pre>
 	</div>
 </div>
@@ -160,7 +160,7 @@ function planAmountUpdatedOnMerchantSite(){
                     PhoneNumber: "1-844-775-4848",
                     CultureName: "en-us"
                 }
-            });
+            }, function () { console.log('Details updated on ready.'); });
         }).onSuccess(function (result) {
             // Respond here if everything goes well.
             alert('Payment was successful! Check console for result details.');

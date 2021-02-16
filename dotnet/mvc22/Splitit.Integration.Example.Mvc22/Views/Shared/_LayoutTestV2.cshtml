@@ -1,0 +1,27 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>V2: @ViewData["Title"]</title>
+</head>
+<body>
+   
+    <div style="margin: 30px;">
+        <a asp-action="Index">Back to index V2</a>
+    </div>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    <script src="@ViewBag.FlexFieldsV2UrlRoot/splitit.flex-fields.sdk.js?v=@(System.DateTime.Now.ToString("yyyy-MM-dd-HH"))"></script>
+    
+    @RenderSection("Scripts", required: false)
+    
+</body>
+</html>

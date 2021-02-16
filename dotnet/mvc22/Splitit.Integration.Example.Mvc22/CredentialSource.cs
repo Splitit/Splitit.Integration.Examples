@@ -93,6 +93,9 @@ namespace Splitit.Integration.Example.Mvc21
         public string FlexFieldsUrlRoot
             => GetCookieValue(nameof(SetCredentialsModel.FlexFieldsUrlRoot)) ?? this.CurrentEnvConfig["FlexFieldsUrlRoot"];
 
+        public string FlexFieldsV2UrlRoot
+            => GetCookieValue(nameof(SetCredentialsModel.FlexFieldsV2UrlRoot)) ?? this.CurrentEnvConfig["FlexFieldsV2UrlRoot"];
+
         public string UpstreamUrlRoot
            => GetCookieValue(nameof(SetCredentialsModel.UpstreamUrlRoot)) ?? this.CurrentEnvConfig["UpstreamUrlRoot"];
     }

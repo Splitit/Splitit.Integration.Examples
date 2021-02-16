@@ -14,6 +14,7 @@ namespace Splitit.Integration.Example.Mvc22.Models
         public string SplititApiUrl { get; set; }
         public string PaymentFormEmbedderUrlRoot { get; set; }
         public string FlexFieldsUrlRoot { get; set; }
+        public string FlexFieldsV2UrlRoot { get; set; }
         public string UpstreamUrlRoot { get; set; }
 
         public string Environment {get;set;}
@@ -30,6 +31,7 @@ namespace Splitit.Integration.Example.Mvc22.Models
                 SplititApiUsername = config["SplititApiUsername"],
                 SplititApiPassword = config["SplititApiPassword"],
                 FlexFieldsUrlRoot = config["FlexFieldsUrlRoot"],
+                FlexFieldsV2UrlRoot = config["FlexFieldsV2UrlRoot"],
                 PaymentFormEmbedderUrlRoot = config["PaymentFormEmbedderUrlRoot"],
                 SplititApiUrl = config["SplititApiUrl"],
                 UpstreamUrlRoot = config["UpstreamUrlRoot"]
@@ -45,6 +47,7 @@ namespace Splitit.Integration.Example.Mvc22.Models
                 SplititApiUsername = configuration.SplititApiUsername,
                 SplititApiPassword = configuration.SplititApiPassword,
                 FlexFieldsUrlRoot = configuration.FlexFieldsUrlRoot,
+                FlexFieldsV2UrlRoot = configuration.FlexFieldsV2UrlRoot,
                 UpstreamUrlRoot = configuration.UpstreamUrlRoot,
                 SplititApiUrl = configuration.SplititApiUrl,
                 PaymentFormEmbedderUrlRoot = configuration.PaymentFormEmbedderUrlRoot
