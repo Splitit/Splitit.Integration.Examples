@@ -90,12 +90,8 @@
         }).onError(function (result) {
             console.log(result);
             $("#error-box").find('ul').html('');
-            for(var i = 0; i < result.fieldErrors.length; i++){
-                $("<li>" + result.fieldErrors[i] + "</li>").appendTo($("#error-box").find('ul'));
-            }
-            for(var i = 0; i < result.otherErrors.length; i++){
-                // Possible to react to specific error codes by accessing result.otherErrors[i].errorCode
-                $("<li>" + result.otherErrors[i].message + "</li>").appendTo($("#error-box").find('ul'));
+            for(var i = 0; i < result.length; i++){
+                $("<li>" + result[i] + "</li>").appendTo($("#error-box").find('ul'));
             }
 
             if (result.hasErrors){
