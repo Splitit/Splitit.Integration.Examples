@@ -1,42 +1,60 @@
 ﻿@model CommonTestModel
 @{
-    ViewData["Title"] = "Flex Fields V2 - Custom errors";
-} 
+	ViewData["Title"] = "Flex Fields V2 - Custom errors";
+}
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+<link rel="stylesheet" href="//cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" />
 
 <h1>@ViewData["Title"]</h1>
 
 <div>
-    <button type="button" style="padding: 10px; margin-bottom: 10px;" onclick="flexFieldsInstance.toggle()">Choose Splitit Payment Option</button>
+	<button type="button" style="padding: 10px; margin-bottom: 10px;" onclick="flexFieldsInstance.toggle()">Choose Splitit Payment Option</button>
 </div>
 
 <style>
 	.splitit-flex-field-error {
-		display:none !important;
+		display: none !important;
 	}
+
 	.splitit-flex-field {
 		margin-bottom: 10px;
 	}
 </style>
 
 <ul id="custom-error-box" style="color: red;">
-
 </ul>
 
-<div class="splitit-default-ui grouped" id="splitit-card-data">
-    <div class="splitit-cc-group">
-        <div id="card-number"></div>
-        <div id="expiration-date"></div>
-        <div id="cvv"></div>
-        <div class="splitit-cc-group-separator"></div>
-    </div>
+<div class="row">
+	<div class="col-md-4">
+		<div class="splitit-default-ui grouped" id="splitit-card-data">
+			<div class="splitit-cc-group">
+				<div id="card-number"></div>
+				<div id="expiration-date"></div>
+				<div id="cvv"></div>
+				<div class="splitit-cc-group-separator"></div>
+			</div>
 
-    <div id="installment-picker"></div>
-    <div id="terms-conditions"></div>
-    <button id="btn-pay"></button>
+			<div id="installment-picker"></div>
+			<div id="terms-conditions"></div>
+			<button id="btn-pay"></button>
+		</div>
+	</div>
+	<div class="col-md-8" style="display: none;">
+		<table id="message-wrap" class="table">
+			<thead>
+				<tr>
+					<td>Message content</td>
+				</tr>
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
+	</div>
 </div>
 
 @section Scripts {
-    <script>
+	<script src="//cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+	<script>
         var flexFieldsInstance = Splitit.FlexFields.setup({
             debug: true,
             culture: '@Model.Culture',
@@ -91,14 +109,25 @@
             $(data.errors).each((idx, el) => {
                 if (el.showError) {
 					var fields = el.fieldTypes.join(',');
-					$("#custom-error-box").append(`<li>[${el.code}] Fields: ${fields}, Error: ${el.description}</li>`);
+					$("#custom-error-box").append(`<li>[${el.code}:${el.source}] Fields: ${fields}, Error: ${el.description}</li>`);
 				}
             });
-			
+
         });
 
         function showSplititForm(){
             flexFieldsInstance.toggle();
         }
-    </script>
+
+		var messageHashMap = {};
+		var tbl = $("#message-wrap").DataTable();
+
+		window.addEventListener("message", function (ev) {
+			let msg = JSON.stringify(ev.data);
+			if (!messageHashMap[msg]) {
+				messageHashMap[msg] = 1;
+				tbl.row.add([msg]).draw();
+			}
+		}, false);
+	</script>
 }
