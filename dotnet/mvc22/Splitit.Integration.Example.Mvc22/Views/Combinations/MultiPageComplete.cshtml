@@ -68,7 +68,10 @@
 				setOutputTitle("danger", "completeCheckout.onError invoked");
 				$("#outputBox").text(JSON.stringify(err, null, 4));
 				$(sender).removeAttr('disabled');
-            });
+			}).onEvent(function (ev, old, newVal) {
+				console.log('Event triggered: ' + ev);
+				console.log({ ev, old, newVal });
+			});
 		}
 
 	</script>
