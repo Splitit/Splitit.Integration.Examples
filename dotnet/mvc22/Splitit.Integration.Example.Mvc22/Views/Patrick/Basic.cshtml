@@ -1,0 +1,121 @@
+﻿@model PatrickViewModel
+@{
+    ViewData["Title"] = "Operation Patrick - PoC";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div>
+    <button type="button" style="padding: 10px; margin-bottom: 10px;" onclick="flexFieldsInstance.toggle()">Choose Splitit Payment Option</button>
+</div>
+
+<div class="splitit-design-classic" id="splitit-card-data">
+    <div class="splitit-cc-group">
+        <div id="splitit-card-number"></div>
+        <div id="splitit-expiration-date"></div>
+        <div id="splitit-cvv"></div>
+        <div class="splitit-cc-group-separator"></div>
+    </div>
+
+    <div id="splitit-installment-picker"></div>
+    <div id="splitit-error-box"></div>
+    <div id="splitit-terms-conditions"></div>
+    <button id="splitit-btn-pay"></button>
+</div>
+
+@section Scripts {
+	<script>
+        var url = 'https://localhost:44111';
+        var flexFieldsInstance;
+
+        function doInitiate() {
+            fetch(`${url}/api/installmentplan/initiate`, {
+                method: 'POST', // *GET, POST, PUT, DELETE, etc.
+                mode: 'cors', // no-cors, *cors, same-origin
+                cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+                credentials: 'same-origin', // include, *same-origin, omit
+                headers: {
+                    'Content-Type': 'application/json',
+                    'api-key': '@Model.ApiKey'
+                    // 'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                redirect: 'follow', // manual, *follow, error
+                referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+                body: JSON.stringify({
+                    PlanData: {
+                        Amount: {
+                            Value: @(Model.Amount),
+                            CurrencyCode: '@Model.CurrencyCode'
+                        }
+                    },
+                    PaymentWizardData: {
+                        RequestedNumberOfInstallments: "@Model.RequestedNumInstallments"
+                    }
+                }) // body data type must match "Content-Type" header
+            }).then(res => res.json().then(data => {
+                console.log(data.PublicToken);
+
+                flexFieldsInstance = Splitit.FlexFields.setup({
+                    endpoint: url,
+                    culture: 'en-US',
+                    publicToken: data.PublicToken,
+                    container: '#splitit-card-data',
+                    fields: {
+                        number: {
+					        selector: "#splitit-card-number"
+                        },
+                        cvv: {
+					        selector: "#splitit-cvv"
+                        },
+                        expirationDate: {
+					        selector: "#splitit-expiration-date"
+                        }
+                    },
+                    installmentPicker: {
+				        selector: "#splitit-installment-picker"
+                    },
+                    termsConditions: {
+				        selector: "#splitit-terms-conditions"
+                    },
+                    errorBox: {
+				        selector: "#splitit-error-box"
+                    },
+                    paymentButton: {
+				        selector: "#splitit-btn-pay"
+                    }
+                }).ready(function () {
+                    var splititFlexFields = this;
+                    console.log(this);
+                    splititFlexFields.updateDetails({
+                        billingAddress: {
+                            AddressLine: "260 Madison Avenue.",
+                            AddressLine2: "Appartment 1",
+                            City: "New York",
+                            State: "NY",
+                            Country: "USA",
+                            Zip: "10016"
+                        },
+                        consumerData: {
+                            FullName: "John Smith",
+                            Email: "JohnS@splitit.com",
+                            PhoneNumber: "1-844-775-4848",
+                            CultureName: "en-us"
+                        }
+                    });
+                }).onSuccess(function (result) {
+                    // Respond here if everything goes well.
+                    alert('Payment was successful! Check consoleModelApiKeyfor result details.');
+                    console.log(result);
+                });
+
+            })).catch(ex => console.error(ex));
+		}
+
+        doInitiate();
+
+
+        function showSplititForm(){
+            flexFieldsInstance.toggle();
+        }
+	</script>
+}
