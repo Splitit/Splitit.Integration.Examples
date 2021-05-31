@@ -85,7 +85,7 @@
     <button type="button" value="Re-init" onclick="toggleSplitit()">Pay with Splitit???</button>
     <button type="button" value="Update billing" onclick="updateBilling()">Update billing</button>
     
-    <script>
+	<script>
         function enablePayButton() {
             $("#btn-pay .spinner-border").addClass('d-none');
             $("#btn-pay").removeAttr('disabled', true);
@@ -150,7 +150,7 @@
                 },
                 consumerData: {
                     FullName: "John Smith",
-                    Email: "JohnS@splitit.com",
+                    Email: "flexy.debug@splitit.com",
                     PhoneNumber: "1-844-775-4848",
                     CultureName: "de-DE"
                 },
@@ -200,7 +200,7 @@
                         },
                         consumerModel: {
                             FullName: "John Smith",
-                            Email: "JohnS@splitit.com",
+                            Email: "flexy.debug@splitit.com",
                             PhoneNumber: "1-844-775-4848",
                             CultureName: "de-DE"
                         }
@@ -218,7 +218,7 @@
                         //splititFlexFields.checkout();
                     }
                 });*/
-                
+
             }).onRequire3ds1(function (result) {
                 // Here it is possible to announce to merchant that he will be redirected to 3D confirmation page.
                 console.log('3Ds1 process initiated...');
@@ -246,9 +246,9 @@
                 $("#error-box").show(); *@
             });
         }
-        
-        
-        
+
+
+
         var curAmount = 1000;
         function changeAmount(){
             curAmount += 200;
@@ -259,6 +259,6 @@
             hf.setNumInstallments(parseInt($(sender).val()));
         }
 
-    </script>
+	</script>
 </body>
 </html>

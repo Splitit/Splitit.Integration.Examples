@@ -87,7 +87,7 @@
                 },
                 consumerData: {
                     FullName: "John Smith",
-                    Email: "JohnS@splitit.com",
+                    Email: "flexy.singlepage+@(new Random().Next(1000))@@splitit.com",
                     PhoneNumber: "1-844-775-4848",
                     CultureName: "en-us"
                 }
@@ -111,7 +111,7 @@
 			if (flexFieldsInstance.hasErrors()) {
 				alert('Payment fields not validated entirely yet.');
 				return;
-			} 
+			}
 
 			$(sender).attr('disabled', 'disabled');
 			$("#complete-payment-button").attr('disabled', 'disabled');

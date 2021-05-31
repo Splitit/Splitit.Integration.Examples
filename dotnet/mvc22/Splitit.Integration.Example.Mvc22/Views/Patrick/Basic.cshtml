@@ -25,14 +25,15 @@
 
 @section Scripts {
 	<script>
-        var url = 'https://localhost:44111';
+        var url = 'https://plan-init.sandbox.splitit.com';
+        //url = 'https://localhost:44111';
         var flexFieldsInstance;
 
         function doInitiate() {
             fetch(`${url}/api/installmentplan/initiate`, {
                 method: 'POST', // *GET, POST, PUT, DELETE, etc.
                 mode: 'cors', // no-cors, *cors, same-origin
-                cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+                //cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
                 credentials: 'same-origin', // include, *same-origin, omit
                 headers: {
                     'Content-Type': 'application/json',
@@ -97,7 +98,7 @@
                         },
                         consumerData: {
                             FullName: "John Smith",
-                            Email: "JohnS@splitit.com",
+                            Email: "flexy.patrick@splitit.com",
                             PhoneNumber: "1-844-775-4848",
                             CultureName: "en-us"
                         }
